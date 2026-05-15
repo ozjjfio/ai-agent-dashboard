@@ -13,31 +13,23 @@ st.markdown("""
 <style>
 div[role="radiogroup"] > label {
     display: block;
-    padding: 10px 16px;
-    margin: 8px 0;
-    border: 1.5px solid #e0e0e0;
-    border-radius: 12px;
-    background-color: #ffffff;
-    font-size: 15px;
+    padding: 6px 10px;
+    margin: 3px 0;
+    font-size: 14px;
     cursor: pointer;
-    transition: background 0.2s;
-}
-div[role="radiogroup"] > label:hover {
-    background-color: #f0f4ff;
-    border-color: #aac4ff;
 }
 .main-title {
-    font-size: 3rem;
-    font-weight: 800;
-    text-align: center;
-    padding: 36px 0 6px 0;
-    letter-spacing: -1px;
+    font-size: 1.6rem;
+    font-weight: 700;
+    text-align: left;
+    padding: 8px 0 2px 0;
+    letter-spacing: -0.5px;
 }
 .main-subtitle {
-    text-align: center;
+    text-align: left;
     color: #888;
-    font-size: 1.05rem;
-    margin-bottom: 36px;
+    font-size: 0.9rem;
+    margin-bottom: 16px;
 }
 </style>
 """, unsafe_allow_html=True)
