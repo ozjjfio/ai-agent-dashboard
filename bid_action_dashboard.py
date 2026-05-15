@@ -1,13 +1,9 @@
 import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
-import matplotlib.font_manager as fm
 import numpy as np
 from datetime import datetime, timedelta
-import random
 
-# ── 한글 폰트 설정 ──────────────────────────────────────────────
-plt.rcParams['font.family'] = 'DejaVu Sans'
 plt.rcParams['axes.unicode_minus'] = False
 
 st.set_page_config(
@@ -16,271 +12,397 @@ st.set_page_config(
     layout="wide"
 )
 
-# ── 가상 데이터 생성 ────────────────────────────────────────────
+# ── 가상 데이터 ────────────────────────────────────────────────
 @st.cache_data
 def load_data():
     today = datetime.today()
-    data = [
+    return pd.DataFrame([
         {
-            "공고명": "A시청 청사 청소용역",
-            "발주기관": "A시청",
-            "지역": "서울",
-            "기초금액": 50000000,
+            "우선순위": 1,
+            "공고명": "국방과학연구소 AI GPU 서버 구축",
+            "발주기관": "국방과학연구소",
+            "지역": "대전",
+            "기초금액": 850000000,
             "마감일": today + timedelta(days=2),
-            "업종": "청소용역",
-            "참여가능": True,
+            "ai_매칭": "지원가능",
+            "필요액션": "가격 검토 필요",
+            "보류사유": None,
+            "관심": True,
+            "ai_요약": "H100 GPU 8장 이상 탑재 서버 납품. NVLink 지원 필수. 납품 후 6개월 유지보수 포함.",
+            "요건": {
+                "GPU 사양 (H100 이상)": {"보유": "H100 SXM5", "충족": True, "근거": "2조 GPU 규격"},
+                "NVLink 지원": {"보유": "지원", "충족": True, "근거": "3조 연결 규격"},
+                "납품 실적 3건 이상": {"보유": "5건", "충족": True, "근거": "4조 자격 요건"},
+                "유지보수 인력 2인 이상": {"보유": "1인", "충족": False, "근거": "5조 유지보수 조항"},
+                "보안 적합성 인증": {"보유": "미보유", "충족": False, "근거": "6조 보안 요건"},
+            },
+            "서류체크": {"사업자등록증": True, "GPU납품실적": True, "보안인증서": False, "유지보수계획서": False},
+            "확인필요조건": ["유지보수 인력 1인 추가 확보 필요", "보안 적합성 인증 취득 여부 확인"],
+            "유사낙찰률": 89.2,
+            "유사낙찰가범위": "748,000,000 ~ 772,000,000원",
             "경쟁강도": "높음",
-            "추천액션": "가격 검토 필요",
-            "보류사유": None,
-            "서류준비": False,
-            "확인여부": True,
-            "ai_요약": "서울 소재 청소용역 면허 보유 업체 대상. 계약기간 1년. 전자입찰 방식.",
-            "참여가능성": 72,
-            "서류체크": {"사업자등록증": True, "청소용역 면허": True, "실적증명서": False, "보험증권": False},
-            "확인필요조건": ["서울 소재 요건 확인 필요", "최근 3년 실적 1건 이상"],
-            "유사낙찰률": 87.8,
-            "유사낙찰가범위": "43,500,000 ~ 44,200,000원",
         },
         {
-            "공고명": "B공단 시설관리 위탁용역",
-            "발주기관": "B공단",
-            "지역": "경기",
-            "기초금액": 72000000,
-            "마감일": today + timedelta(days=4),
-            "업종": "시설관리",
-            "참여가능": True,
+            "우선순위": 2,
+            "공고명": "한국전자통신연구원 딥러닝 연산 장비 도입",
+            "발주기관": "ETRI",
+            "지역": "대전",
+            "기초금액": 520000000,
+            "마감일": today + timedelta(days=3),
+            "ai_매칭": "지원가능",
+            "필요액션": "오늘 서류 확인",
+            "보류사유": None,
+            "관심": True,
+            "ai_요약": "A100 또는 동급 이상 GPU 클러스터 구성. InfiniBand 네트워크 포함. 설치 및 세팅 포함.",
+            "요건": {
+                "GPU 사양 (A100 이상)": {"보유": "H100 SXM5", "충족": True, "근거": "2조 장비 규격"},
+                "InfiniBand 지원": {"보유": "지원", "충족": True, "근거": "3조 네트워크"},
+                "클러스터 구성 경험": {"보유": "3건", "충족": True, "근거": "4조 실적"},
+                "설치 인력 보유": {"보유": "2인", "충족": True, "근거": "5조 설치 조항"},
+                "납품 후 테스트 지원": {"보유": "가능", "충족": True, "근거": "6조 검수"},
+            },
+            "서류체크": {"사업자등록증": True, "납품실적": True, "설치계획서": True, "보험증권": False},
+            "확인필요조건": ["보험증권 갱신 필요"],
+            "유사낙찰률": 91.5,
+            "유사낙찰가범위": "470,000,000 ~ 485,000,000원",
             "경쟁강도": "보통",
-            "추천액션": "오늘 서류 확인",
-            "보류사유": None,
-            "서류준비": False,
-            "확인여부": False,
-            "ai_요약": "경기 소재 시설관리 업체 대상. 건물 전기·소방 설비 포함. 계약기간 2년.",
-            "참여가능성": 85,
-            "서류체크": {"사업자등록증": True, "시설관리 면허": True, "실적증명서": True, "보험증권": False},
-            "확인필요조건": ["전기공사업 면허 포함 여부 확인"],
-            "유사낙찰률": 91.2,
-            "유사낙찰가범위": "65,000,000 ~ 67,500,000원",
         },
         {
-            "공고명": "C구청 홍보물 제작 용역",
-            "발주기관": "C구청",
+            "우선순위": 3,
+            "공고명": "서울시 스마트시티 AI 인프라 구축",
+            "발주기관": "서울특별시",
             "지역": "서울",
-            "기초금액": 18000000,
-            "마감일": today + timedelta(days=7),
-            "업종": "인쇄·홍보",
-            "참여가능": True,
-            "경쟁강도": "낮음",
-            "추천액션": "참여 가능성 높음",
+            "기초금액": 1200000000,
+            "마감일": today + timedelta(days=5),
+            "ai_매칭": "검토 필요",
+            "필요액션": "요건 재확인",
             "보류사유": None,
-            "서류준비": True,
-            "확인여부": False,
-            "ai_요약": "서울 소재 인쇄·홍보물 제작 업체 대상. 리플렛 5,000부 포함.",
-            "참여가능성": 91,
-            "서류체크": {"사업자등록증": True, "인쇄업 신고증": True, "실적증명서": True, "보험증권": True},
+            "관심": False,
+            "ai_요약": "엣지 AI 서버 및 GPU 인프라 통합 구축. 중소기업 참여 제한 없음. 컨소시엄 가능.",
+            "요건": {
+                "엣지 AI 서버 납품 실적": {"보유": "1건", "충족": False, "근거": "3조 실적 요건"},
+                "GPU 서버 구축 실적": {"보유": "5건", "충족": True, "근거": "4조 실적"},
+                "컨소시엄 구성 가능": {"보유": "가능", "충족": True, "근거": "2조 참가 자격"},
+                "보안 인증 (CC인증)": {"보유": "미보유", "충족": False, "근거": "5조 보안"},
+                "유지보수 3년 이상": {"보유": "1년", "충족": False, "근거": "6조 유지보수"},
+            },
+            "서류체크": {"사업자등록증": True, "실적증명서": True, "CC인증서": False, "컨소시엄동의서": False},
+            "확인필요조건": ["CC인증 취득 또는 컨소시엄 파트너 필요", "유지보수 기간 요건 확인"],
+            "유사낙찰률": 85.3,
+            "유사낙찰가범위": "1,010,000,000 ~ 1,040,000,000원",
+            "경쟁강도": "높음",
+        },
+        {
+            "우선순위": 4,
+            "공고명": "중소벤처기업부 AI 바우처 GPU 장비",
+            "발주기관": "중소벤처기업부",
+            "지역": "세종",
+            "기초금액": 180000000,
+            "마감일": today + timedelta(days=6),
+            "ai_매칭": "지원가능",
+            "필요액션": "참여 가능성 높음",
+            "보류사유": None,
+            "관심": True,
+            "ai_요약": "중소기업 AI 바우처 지원용 GPU 서버 납품. RTX 4090 또는 A6000급. 소량 납품.",
+            "요건": {
+                "GPU 사양 (RTX4090/A6000)": {"보유": "A6000", "충족": True, "근거": "2조 규격"},
+                "납품 실적 1건 이상": {"보유": "5건", "충족": True, "근거": "3조 자격"},
+                "중소기업 확인서": {"보유": "보유", "충족": True, "근거": "4조 참가 자격"},
+                "AS 1년 보증": {"보유": "2년", "충족": True, "근거": "5조 AS"},
+                "세금계산서 발행 가능": {"보유": "가능", "충족": True, "근거": "6조 계약"},
+            },
+            "서류체크": {"사업자등록증": True, "중소기업확인서": True, "납품실적": True, "AS계획서": True},
             "확인필요조건": [],
-            "유사낙찰률": 94.5,
-            "유사낙찰가범위": "16,800,000 ~ 17,200,000원",
+            "유사낙찰률": 94.1,
+            "유사낙찰가범위": "167,000,000 ~ 172,000,000원",
+            "경쟁강도": "낮음",
         },
         {
-            "공고명": "D기관 IT 유지보수 용역",
-            "발주기관": "D기관",
-            "지역": "경기",
-            "기초금액": 35000000,
-            "마감일": today + timedelta(days=10),
-            "업종": "IT유지보수",
-            "참여가능": False,
-            "경쟁강도": "높음",
-            "추천액션": "참여 보류",
-            "보류사유": "지역 조건 미충족",
-            "서류준비": False,
-            "확인여부": False,
-            "ai_요약": "수도권 소재 IT 유지보수 업체 대상. 네트워크 장비 관리 포함.",
-            "참여가능성": 20,
-            "서류체크": {"사업자등록증": True, "SW사업자 확인서": False, "실적증명서": False, "보험증권": False},
-            "확인필요조건": ["SW사업자 확인서 발급 필요", "수도권 소재 요건 확인"],
-            "유사낙찰률": 82.3,
-            "유사낙찰가범위": "28,000,000 ~ 30,000,000원",
-        },
-        {
-            "공고명": "E시 물품 납품 계약",
-            "발주기관": "E시청",
+            "우선순위": 5,
+            "공고명": "국가정보원 보안 AI 서버 도입",
+            "발주기관": "국가정보원",
             "지역": "서울",
-            "기초금액": 12000000,
-            "마감일": today + timedelta(days=1),
-            "업종": "물품납품",
-            "참여가능": True,
-            "경쟁강도": "보통",
-            "추천액션": "가격 검토 필요",
-            "보류사유": None,
-            "서류준비": False,
-            "확인여부": True,
-            "ai_요약": "서울 소재 물품 납품 업체 대상. 사무용품 일괄 납품.",
-            "참여가능성": 78,
-            "서류체크": {"사업자등록증": True, "물품납품 실적": False, "보험증권": True, "세금완납증명": False},
-            "확인필요조건": ["납품 실적 1건 이상 요건 확인"],
-            "유사낙찰률": 89.1,
-            "유사낙찰가범위": "10,800,000 ~ 11,300,000원",
+            "기초금액": 950000000,
+            "마감일": today + timedelta(days=8),
+            "ai_매칭": "보류",
+            "필요액션": "참여 보류",
+            "보류사유": "보안 인증 미충족",
+            "관심": False,
+            "ai_요약": "보안 특수 목적 AI 서버. 국정원 보안 적합성 검증 필수. 납품 업체 사전 등록 필요.",
+            "요건": {
+                "국정원 보안 적합성": {"보유": "미보유", "충족": False, "근거": "2조 필수 요건"},
+                "납품업체 사전 등록": {"보유": "미등록", "충족": False, "근거": "3조 자격"},
+                "GPU 사양": {"보유": "H100", "충족": True, "근거": "4조 장비"},
+                "보안 서약서": {"보유": "가능", "충족": True, "근거": "5조"},
+                "비밀취급인가": {"보유": "미보유", "충족": False, "근거": "6조"},
+            },
+            "서류체크": {"사업자등록증": True, "보안적합성인증": False, "비밀취급인가": False, "사전등록증": False},
+            "확인필요조건": ["보안 적합성 인증 없으면 참여 불가", "납품업체 사전 등록 6개월 소요"],
+            "유사낙찰률": 88.0,
+            "유사낙찰가범위": "836,000,000 ~ 855,000,000원",
+            "경쟁강도": "높음",
         },
-    ]
-    return pd.DataFrame(data)
+    ])
 
 df = load_data()
-
-# ── 헤더 ───────────────────────────────────────────────────────
-st.title("🥷 공고털이")
-st.caption(f"오늘의 입찰 액션 대시보드 — {datetime.today().strftime('%Y-%m-%d')}")
-st.divider()
-
-# ── 상단 요약 카드 ──────────────────────────────────────────────
-c1, c2, c3, c4, c5, c6 = st.columns(6)
 today = datetime.today()
 
-신규공고 = len(df)
-마감임박 = len(df[df["마감일"] <= today + timedelta(days=3)])
-참여가능 = len(df[df["참여가능"] == True])
-서류미준비 = len(df[(df["참여가능"] == True) & (df["서류준비"] == False)])
-미확인 = len(df[df["확인여부"] == False])
-조건적합 = len(df[df["참여가능"] == True])
-기회금액 = df[df["참여가능"] == True]["기초금액"].sum()
+if "company" not in st.session_state:
+    st.session_state.company = {
+        "회사명": "테크비전 주식회사",
+        "업종": "IT장비납품",
+        "세부품명번호": "2127-0001",
+        "품명": "GPU 서버",
+        "지역": "서울",
+        "예산금액대": "1억 ~ 10억",
+    }
 
-c1.metric("📌 신규 공고", f"{신규공고}건")
-c2.metric("🔴 마감 임박", f"{마감임박}건")
-c3.metric("✅ 참여 가능", f"{참여가능}건")
-c4.metric("📄 서류 미준비", f"{서류미준비}건")
-c5.metric("👁 미확인", f"{미확인}건")
-c6.metric("💰 기회 금액", f"{기회금액/100000000:.1f}억")
+if "관심공고" not in st.session_state:
+    st.session_state.관심공고 = list(df[df["관심"] == True]["공고명"])
 
-st.divider()
+# ── 사이드바 ───────────────────────────────────────────────────
+with st.sidebar:
+    st.title("🥷 공고털이")
+    st.caption(datetime.today().strftime('%Y-%m-%d'))
+    st.divider()
+    menu = st.radio(
+        "메뉴",
+        ["오늘의 액션", "공고 검색", "관심 공고", "요건 매칭", "회사 프로필", "설정"],
+        label_visibility="collapsed"
+    )
+    st.divider()
+    st.caption(f"👤 {st.session_state.company['회사명']}")
+    st.caption(f"📍 {st.session_state.company['지역']} | {st.session_state.company['업종']}")
 
-# ── 공고 리스트 + 상세 ─────────────────────────────────────────
-st.subheader("오늘 확인할 공고")
+# ══════════════════════════════════════════════════════════════
+# 1. 오늘의 액션
+# ══════════════════════════════════════════════════════════════
+if menu == "오늘의 액션":
+    st.header(f"오늘의 액션 · {datetime.today().strftime('%Y-%m-%d')}")
 
-# 필터
-col_f1, col_f2, col_f3 = st.columns(3)
-with col_f1:
-    filter_참여 = st.selectbox("참여 가능 여부", ["전체", "가능만", "불가만"])
-with col_f2:
-    filter_경쟁 = st.selectbox("경쟁 강도", ["전체", "낮음", "보통", "높음"])
-with col_f3:
-    filter_지역 = st.selectbox("지역", ["전체"] + list(df["지역"].unique()))
+    긴급 = df[df["마감일"] <= today + timedelta(days=3)]
+    검토 = df[(df["마감일"] > today + timedelta(days=3)) & (df["마감일"] <= today + timedelta(days=7))]
+    보류 = df[df["ai_매칭"] == "보류"]
 
-filtered = df.copy()
-if filter_참여 == "가능만":
-    filtered = filtered[filtered["참여가능"] == True]
-elif filter_참여 == "불가만":
-    filtered = filtered[filtered["참여가능"] == False]
-if filter_경쟁 != "전체":
-    filtered = filtered[filtered["경쟁강도"] == filter_경쟁]
-if filter_지역 != "전체":
-    filtered = filtered[filtered["지역"] == filter_지역]
+    c1, c2, c3, c4 = st.columns(4)
+    c1.metric("🔴 긴급 처리", f"{len(긴급)}건", "마감 D-3")
+    c2.metric("🟡 검토 추천", f"{len(검토)}건", "마감 4~7일")
+    c3.metric("⚪ 보류 추천", f"{len(보류)}건", "요건 미충족")
+    c4.metric("📋 전체 공고", f"{len(df)}건", "오늘 수집 기준")
 
-# 공고 리스트
-for _, row in filtered.iterrows():
-    dday = (row["마감일"] - today).days
-    dday_str = f"D-{dday}" if dday >= 0 else "마감"
-    참여_icon = "✅" if row["참여가능"] else "❌"
+    st.divider()
+    st.subheader("오늘 우선 확인해야 할 공고")
 
-    if dday <= 2:
-        border_color = "#ff4b4b"
-    elif dday <= 5:
-        border_color = "#ffa500"
-    else:
-        border_color = "#cccccc"
+    header = st.columns([1, 4, 2, 2, 2, 2])
+    header[0].markdown("**순위**")
+    header[1].markdown("**공고명**")
+    header[2].markdown("**발주기관**")
+    header[3].markdown("**마감일**")
+    header[4].markdown("**필요 액션**")
+    header[5].markdown("**AI 매칭**")
+    st.divider()
 
-    with st.expander(
-        f"{참여_icon} {row['공고명']} | {row['발주기관']} | "
-        f"{int(row['기초금액']/1000000)}M | "
-        f"{'🔴' if dday <= 2 else '🟡' if dday <= 5 else '⚪'} {dday_str} | "
-        f"👉 {row['추천액션']}"
-    ):
-        left, right = st.columns([1, 1])
+    for _, row in df.sort_values("우선순위").iterrows():
+        dday = (row["마감일"] - today).days
+        cols = st.columns([1, 4, 2, 2, 2, 2])
+        cols[0].markdown(f"**{row['우선순위']}**")
+        cols[1].markdown(row["공고명"])
+        cols[2].markdown(row["발주기관"])
+        cols[3].markdown(f"{'🔴' if dday <= 2 else '🟡' if dday <= 5 else '⚪'} D-{dday}")
+        cols[4].markdown(row["필요액션"])
+        if row["ai_매칭"] == "지원가능":
+            cols[5].success("지원가능")
+        elif row["ai_매칭"] == "검토 필요":
+            cols[5].warning("검토 필요")
+        else:
+            cols[5].error("보류")
 
-        with left:
-            st.markdown("**📝 AI 공고 요약**")
-            st.info(row["ai_요약"])
+    st.divider()
+    st.subheader("오늘 해야 할 일")
+    할일 = {"제안서 검토": 2, "제출 서류": 4, "실적 증명": 3, "기술지원": 1, "원문 확인": 2}
+    cols = st.columns(len(할일))
+    for i, (k, v) in enumerate(할일.items()):
+        cols[i].metric(k, f"{v}건")
 
-            st.markdown("**🏢 참여 가능성**")
-            st.progress(row["참여가능성"] / 100)
-            st.caption(f"{row['참여가능성']}% — {'참여 권장' if row['참여가능성'] >= 70 else '신중 검토 필요'}")
+# ══════════════════════════════════════════════════════════════
+# 2. 공고 검색
+# ══════════════════════════════════════════════════════════════
+elif menu == "공고 검색":
+    st.header("공고 검색")
+    st.caption("나라장터 공고를 검색합니다 (현재 데모 데이터 기준)")
 
-            if row["확인필요조건"]:
-                st.markdown("**⚠️ 확인 필요 조건**")
-                for 조건 in row["확인필요조건"]:
-                    st.warning(조건)
-            else:
-                st.success("확인 필요 조건 없음")
+    col1, col2, col3 = st.columns(3)
+    keyword = col1.text_input("검색어", placeholder="예: GPU, 서버, AI")
+    filter_매칭 = col2.selectbox("AI 매칭", ["전체", "지원가능", "검토 필요", "보류"])
+    filter_경쟁 = col3.selectbox("경쟁 강도", ["전체", "낮음", "보통", "높음"])
 
-        with right:
-            st.markdown("**📄 제출 서류 체크리스트**")
-            for 서류, 준비 in row["서류체크"].items():
-                if 준비:
-                    st.markdown(f"✅ {서류}")
+    filtered = df.copy()
+    if keyword:
+        filtered = filtered[
+            filtered["공고명"].str.contains(keyword) |
+            filtered["발주기관"].str.contains(keyword)
+        ]
+    if filter_매칭 != "전체":
+        filtered = filtered[filtered["ai_매칭"] == filter_매칭]
+    if filter_경쟁 != "전체":
+        filtered = filtered[filtered["경쟁강도"] == filter_경쟁]
+
+    st.caption(f"검색 결과 {len(filtered)}건")
+    st.divider()
+
+    for _, row in filtered.iterrows():
+        dday = (row["마감일"] - today).days
+        with st.expander(f"{row['공고명']} | {row['발주기관']} | {int(row['기초금액']/100000000)}억 | D-{dday}"):
+            st.markdown(f"**AI 요약:** {row['ai_요약']}")
+            st.markdown(f"**경쟁강도:** {row['경쟁강도']} | **AI 매칭:** {row['ai_매칭']}")
+            is_관심 = row["공고명"] in st.session_state.관심공고
+            if st.button("⭐ 관심 해제" if is_관심 else "☆ 관심 등록", key=f"s_{row['공고명']}"):
+                if is_관심:
+                    st.session_state.관심공고.remove(row["공고명"])
                 else:
-                    st.markdown(f"❌ {서류} — 준비 필요")
+                    st.session_state.관심공고.append(row["공고명"])
+                st.rerun()
 
-            st.markdown("**📊 유사 낙찰 사례**")
-            st.markdown(f"- 평균 낙찰률: **{row['유사낙찰률']}%**")
-            st.markdown(f"- 낙찰가 참고 범위: **{row['유사낙찰가범위']}**")
-            st.caption("※ 실제 투찰가는 원가·자격·현장조건에 따라 달라지는 참고용 지표입니다.")
+# ══════════════════════════════════════════════════════════════
+# 3. 관심 공고
+# ══════════════════════════════════════════════════════════════
+elif menu == "관심 공고":
+    st.header("관심 공고")
+    관심df = df[df["공고명"].isin(st.session_state.관심공고)]
 
-st.divider()
+    if len(관심df) == 0:
+        st.info("등록된 관심 공고가 없습니다. 공고 검색에서 등록하세요.")
+    else:
+        for _, row in 관심df.iterrows():
+            dday = (row["마감일"] - today).days
+            with st.expander(f"⭐ {row['공고명']} | {row['발주기관']} | D-{dday} | {row['ai_매칭']}"):
+                left, right = st.columns(2)
+                with left:
+                    st.markdown("**📝 공고 요약**")
+                    st.info(row["ai_요약"])
+                    st.markdown(f"**기초금액:** {int(row['기초금액']/100000000)}억원")
+                    st.markdown(f"**마감일:** {row['마감일'].strftime('%Y-%m-%d')} (D-{dday})")
+                    st.markdown(f"**경쟁강도:** {row['경쟁강도']}")
+                with right:
+                    st.markdown("**📄 제출 서류**")
+                    for 서류, 준비 in row["서류체크"].items():
+                        st.markdown(f"{'✅' if 준비 else '❌'} {서류}")
+                    if row["확인필요조건"]:
+                        st.markdown("**⚠️ 확인 필요**")
+                        for 조건 in row["확인필요조건"]:
+                            st.warning(조건)
+                st.markdown(f"**유사 낙찰률:** {row['유사낙찰률']}% | **낙찰가 범위:** {row['유사낙찰가범위']}")
+                st.caption("※ 참고용 지표이며 실제 투찰가는 담당자가 판단하세요.")
+                if st.button("⭐ 관심 해제", key=f"r_{row['공고명']}"):
+                    st.session_state.관심공고.remove(row["공고명"])
+                    st.rerun()
 
-# ── 하단 차트 ──────────────────────────────────────────────────
-st.subheader("입찰 현황 분석")
-chart1, chart2, chart3 = st.columns(3)
+# ══════════════════════════════════════════════════════════════
+# 4. 요건 매칭
+# ══════════════════════════════════════════════════════════════
+elif menu == "요건 매칭":
+    st.header("요건 매칭")
+    공고선택 = st.selectbox("공고 선택", df["공고명"].tolist())
+    row = df[df["공고명"] == 공고선택].iloc[0]
+    st.divider()
 
-# 경쟁 강도 분포
-with chart1:
-    st.markdown("**경쟁 강도 분포**")
-    경쟁_counts = df["경쟁강도"].value_counts()
-    fig1, ax1 = plt.subplots(figsize=(3.5, 3.5))
-    colors = ["#ff6b6b", "#ffa94d", "#69db7c"]
-    ax1.pie(
-        경쟁_counts.values,
-        labels=경쟁_counts.index,
-        autopct="%1.0f%%",
-        colors=colors[:len(경쟁_counts)],
-        startangle=90
-    )
-    fig1.patch.set_alpha(0)
-    st.pyplot(fig1)
+    left, right = st.columns([3, 2])
+    with left:
+        st.subheader("요건 항목표")
+        요건df = pd.DataFrame([
+            {
+                "요건 항목": k,
+                "우리 회사 보유": v["보유"],
+                "충족 여부": "✅ 충족" if v["충족"] else "❌ 미충족",
+                "경쟁 강도": row["경쟁강도"],
+                "근거 (원문)": v["근거"],
+            }
+            for k, v in row["요건"].items()
+        ])
+        st.dataframe(요건df, use_container_width=True, hide_index=True)
 
-# 지역별 공고 수
-with chart2:
-    st.markdown("**지역별 공고 수**")
-    지역_counts = df["지역"].value_counts()
-    fig2, ax2 = plt.subplots(figsize=(3.5, 3.5))
-    ax2.barh(지역_counts.index, 지역_counts.values, color="#4dabf7")
-    ax2.set_xlabel("건수")
-    ax2.spines["top"].set_visible(False)
-    ax2.spines["right"].set_visible(False)
-    fig2.patch.set_alpha(0)
-    st.pyplot(fig2)
+    with right:
+        st.subheader("통합 매칭 결과")
+        총 = len(row["요건"])
+        충족 = sum(1 for v in row["요건"].values() if v["충족"])
+        미충족 = 총 - 충족
+        pct = int(충족 / 총 * 100)
 
-# 마감 임박 현황
-with chart3:
-    st.markdown("**마감 임박 공고 현황**")
-    df["D-day"] = (df["마감일"] - today).dt.days
-    df_sorted = df.sort_values("D-day")
-    fig3, ax3 = plt.subplots(figsize=(3.5, 3.5))
-    bar_colors = ["#ff4b4b" if d <= 2 else "#ffa500" if d <= 5 else "#74c0fc" for d in df_sorted["D-day"]]
-    ax3.barh(
-        [n[:8] for n in df_sorted["공고명"]],
-        df_sorted["D-day"],
-        color=bar_colors
-    )
-    ax3.set_xlabel("남은 일수")
-    ax3.spines["top"].set_visible(False)
-    ax3.spines["right"].set_visible(False)
-    fig3.patch.set_alpha(0)
-    st.pyplot(fig3)
+        fig, ax = plt.subplots(figsize=(3.5, 3.5))
+        ax.pie(
+            [충족, 미충족],
+            colors=["#4dabf7", "#dee2e6"],
+            startangle=90,
+            wedgeprops={"width": 0.5}
+        )
+        ax.text(0, 0, f"{pct}%", ha="center", va="center", fontsize=26, fontweight="bold")
+        fig.patch.set_alpha(0)
+        st.pyplot(fig)
 
-# 보류 사유
-st.markdown("**보류 사유**")
-보류df = df[df["보류사유"].notna()][["공고명", "발주기관", "보류사유"]]
-if len(보류df) > 0:
-    st.dataframe(보류df, use_container_width=True, hide_index=True)
-else:
-    st.success("보류 공고 없음")
+        if pct >= 80:
+            st.success(f"✅ 매칭률 {pct}% — 참여 권장")
+            st.markdown("**다음 액션:** 서류 준비 후 입찰 등록")
+        elif pct >= 50:
+            st.warning(f"🟡 매칭률 {pct}% — 신중 검토 필요")
+            st.markdown("**다음 액션:** 미충족 요건 보완 가능 여부 확인")
+        else:
+            st.error(f"❌ 매칭률 {pct}% — 참여 보류 권장")
+            st.markdown("**다음 액션:** 요건 충족 후 재검토")
 
-st.caption("※ 이 대시보드는 참고용 정보를 제공하며, 최종 입찰 판단은 담당자가 직접 확인 후 결정하시기 바랍니다.")
+        st.caption(f"충족 {충족} / 미충족 {미충족} / 전체 {총}건")
+        st.caption("※ AI 분석 결과이며 최종 판단은 담당자가 확인하세요.")
+
+# ══════════════════════════════════════════════════════════════
+# 5. 회사 프로필
+# ══════════════════════════════════════════════════════════════
+elif menu == "회사 프로필":
+    st.header("회사 프로필")
+    st.caption("입력된 정보를 기준으로 AI가 공고 매칭을 수행합니다.")
+    st.divider()
+
+    c = st.session_state.company
+    col1, col2 = st.columns(2)
+    with col1:
+        c["회사명"] = st.text_input("회사명", value=c["회사명"])
+        c["업종"] = st.text_input("업종", value=c["업종"])
+        c["세부품명번호"] = st.text_input("세부품명번호", value=c["세부품명번호"])
+    with col2:
+        c["품명"] = st.text_input("품명", value=c["품명"])
+        c["지역"] = st.selectbox("지역", ["서울", "경기", "대전", "부산", "기타"],
+            index=["서울", "경기", "대전", "부산", "기타"].index(c["지역"]))
+        c["예산금액대"] = st.selectbox("예산 금액대", ["1천만 ~ 1억", "1억 ~ 10억", "10억 이상"],
+            index=["1천만 ~ 1억", "1억 ~ 10억", "10억 이상"].index(c["예산금액대"]))
+
+    if st.button("저장", use_container_width=True):
+        st.session_state.company = c
+        st.success("저장되었습니다.")
+
+# ══════════════════════════════════════════════════════════════
+# 6. 설정
+# ══════════════════════════════════════════════════════════════
+elif menu == "설정":
+    st.header("설정")
+    st.divider()
+
+    st.subheader("로그인")
+    st.text_input("이메일", placeholder="example@company.com")
+    st.text_input("비밀번호", type="password", placeholder="••••••••")
+    col1, col2 = st.columns(2)
+    with col1:
+        if st.button("로그인", use_container_width=True):
+            st.success("로그인되었습니다. (데모)")
+    with col2:
+        if st.button("로그아웃", use_container_width=True):
+            st.info("로그아웃되었습니다. (데모)")
+
+    st.divider()
+    st.subheader("회원가입")
+    st.text_input("이름", placeholder="홍길동")
+    st.text_input("회사명", placeholder="테크비전 주식회사")
+    st.text_input("가입 이메일", placeholder="example@company.com")
+    st.text_input("가입 비밀번호", type="password", placeholder="••••••••")
+    if st.button("회원가입", use_container_width=True):
+        st.success("가입이 완료되었습니다. (데모)")
+
+    st.divider()
+    st.caption("※ 이 대시보드는 참고용이며 최종 입찰 판단은 담당자가 직접 확인하세요.")
