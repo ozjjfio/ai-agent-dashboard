@@ -303,12 +303,12 @@ elif menu == "관심 공고":
     관심df = df[df["공고명"].isin(st.session_state.관심공고)]
 
     if len(관심df) == 0:
-            st.info("등록된 관심 공고가 없습니다. 공고 검색에서 등록하세요.")
-            else:
+        st.info("등록된 관심 공고가 없습니다. 공고 검색에서 등록하세요.")
+    else:
         for _, row in 관심df.iterrows():
             dday = (row["마감일"] - today).days
             st.subheader(f"⭐ {row['공고명']}")
-    st.divider()
+            st.divider()
             left, right = st.columns(2)
             with left:
                 st.markdown("**📝 AI 요약**")
@@ -349,7 +349,7 @@ elif menu == "요건 매칭":
     left, right = st.columns([3, 2])
     with left:
         st.subheader("요건 항목표")
-    st.divider()
+        st.divider()
         요건df = pd.DataFrame([
             {
                 "요건 항목": k,
@@ -364,7 +364,7 @@ elif menu == "요건 매칭":
         
     with right:
         st.subheader("통합 매칭 결과")
-    st.divider()
+        st.divider()
         총 = len(row["요건"])
         충족 = sum(1 for v in row["요건"].values() if v["충족"])
         미충족 = 총 - 충족
