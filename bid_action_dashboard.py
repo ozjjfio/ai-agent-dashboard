@@ -11,8 +11,8 @@ plt.rcParams['font.family'] = 'DejaVu Sans'
 plt.rcParams['axes.unicode_minus'] = False
 
 st.set_page_config(
-    page_title="AI Bid Action Agent",
-    page_icon="📋",
+    page_title="공고털이",
+    page_icon="🥷",
     layout="wide"
 )
 
@@ -127,7 +127,7 @@ def load_data():
 df = load_data()
 
 # ── 헤더 ───────────────────────────────────────────────────────
-st.title("📋 AI Bid Action Agent")
+st.title("🥷 공고털이")
 st.caption(f"오늘의 입찰 액션 대시보드 — {datetime.today().strftime('%Y-%m-%d')}")
 st.divider()
 
