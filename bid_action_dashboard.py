@@ -6,11 +6,54 @@ from datetime import datetime, timedelta
 
 plt.rcParams['axes.unicode_minus'] = False
 
-st.set_page_config(
-    page_title="공고털이",
-    page_icon="🥷",
-    layout="wide"
-)
+st.set_page_config(page_title="공고털이", page_icon="🥷", layout="wide")
+
+# ── CSS ───────────────────────────────────────────────────────
+st.markdown("""
+<style>
+div[role="radiogroup"] > label {
+    display: block;
+    padding: 10px 16px;
+    margin: 8px 0;
+    border: 1.5px solid #e0e0e0;
+    border-radius: 12px;
+    background-color: #ffffff;
+    font-size: 15px;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+div[role="radiogroup"] > label:hover {
+    background-color: #f0f4ff;
+    border-color: #aac4ff;
+}
+.main-title {
+    font-size: 3rem;
+    font-weight: 800;
+    text-align: center;
+    padding: 36px 0 6px 0;
+    letter-spacing: -1px;
+}
+.main-subtitle {
+    text-align: center;
+    color: #888;
+    font-size: 1.05rem;
+    margin-bottom: 36px;
+}
+.card {
+    border: 1.5px solid #e8e8e8;
+    border-radius: 16px;
+    padding: 22px 26px;
+    margin-bottom: 20px;
+    background-color: #ffffff;
+}
+.card-title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin-bottom: 16px;
+    color: #222;
+}
+</style>
+""", unsafe_allow_html=True)
 
 # ── 가상 데이터 ────────────────────────────────────────────────
 @st.cache_data
@@ -156,13 +199,12 @@ if "company" not in st.session_state:
         "지역": "서울",
         "예산금액대": "1억 ~ 10억",
     }
-
 if "관심공고" not in st.session_state:
     st.session_state.관심공고 = list(df[df["관심"] == True]["공고명"])
 
 # ── 사이드바 ───────────────────────────────────────────────────
 with st.sidebar:
-    st.title("🥷 공고털이")
+    st.markdown("## 🥷 공고털이")
     st.caption(datetime.today().strftime('%Y-%m-%d'))
     st.divider()
     menu = st.radio(
@@ -174,34 +216,40 @@ with st.sidebar:
     st.caption(f"👤 {st.session_state.company['회사명']}")
     st.caption(f"📍 {st.session_state.company['지역']} | {st.session_state.company['업종']}")
 
+# ── 헬퍼: 카드 래퍼 ───────────────────────────────────────────
+def card_start(title=""):
+    if title:
+        st.markdown(f'<div class="card"><div class="card-title">{title}</div>', unsafe_allow_html=True)
+    else:
+        st.markdown('<div class="card">', unsafe_allow_html=True)
+
+def card_end():
+    st.markdown('</div>', unsafe_allow_html=True)
+
 # ══════════════════════════════════════════════════════════════
 # 1. 오늘의 액션
 # ══════════════════════════════════════════════════════════════
 if menu == "오늘의 액션":
-    st.header(f"오늘의 액션 · {datetime.today().strftime('%Y-%m-%d')}")
+    st.markdown('<div class="main-title">🥷 공고털이</div>', unsafe_allow_html=True)
+    st.markdown('<div class="main-subtitle">공공조달 GPU 입찰 AI 보조 에이전트</div>', unsafe_allow_html=True)
 
     긴급 = df[df["마감일"] <= today + timedelta(days=3)]
     검토 = df[(df["마감일"] > today + timedelta(days=3)) & (df["마감일"] <= today + timedelta(days=7))]
     보류 = df[df["ai_매칭"] == "보류"]
 
+    card_start(f"오늘의 액션 · {datetime.today().strftime('%Y-%m-%d')}")
     c1, c2, c3, c4 = st.columns(4)
     c1.metric("🔴 긴급 처리", f"{len(긴급)}건", "마감 D-3")
     c2.metric("🟡 검토 추천", f"{len(검토)}건", "마감 4~7일")
     c3.metric("⚪ 보류 추천", f"{len(보류)}건", "요건 미충족")
     c4.metric("📋 전체 공고", f"{len(df)}건", "오늘 수집 기준")
+    card_end()
 
-    st.divider()
-    st.subheader("오늘 우선 확인해야 할 공고")
-
+    card_start("오늘 우선 확인해야 할 공고")
     header = st.columns([1, 4, 2, 2, 2, 2])
-    header[0].markdown("**순위**")
-    header[1].markdown("**공고명**")
-    header[2].markdown("**발주기관**")
-    header[3].markdown("**마감일**")
-    header[4].markdown("**필요 액션**")
-    header[5].markdown("**AI 매칭**")
+    for col, label in zip(header, ["순위", "공고명", "발주기관", "마감일", "필요 액션", "AI 매칭"]):
+        col.markdown(f"**{label}**")
     st.divider()
-
     for _, row in df.sort_values("우선순위").iterrows():
         dday = (row["마감일"] - today).days
         cols = st.columns([1, 4, 2, 2, 2, 2])
@@ -216,25 +264,28 @@ if menu == "오늘의 액션":
             cols[5].warning("검토 필요")
         else:
             cols[5].error("보류")
+    card_end()
 
-    st.divider()
-    st.subheader("오늘 해야 할 일")
+    card_start("오늘 해야 할 일")
     할일 = {"제안서 검토": 2, "제출 서류": 4, "실적 증명": 3, "기술지원": 1, "원문 확인": 2}
     cols = st.columns(len(할일))
     for i, (k, v) in enumerate(할일.items()):
         cols[i].metric(k, f"{v}건")
+    card_end()
 
 # ══════════════════════════════════════════════════════════════
 # 2. 공고 검색
 # ══════════════════════════════════════════════════════════════
 elif menu == "공고 검색":
-    st.header("공고 검색")
-    st.caption("나라장터 공고를 검색합니다 (현재 데모 데이터 기준)")
+    st.markdown('<div class="main-title">🔍 공고 검색</div>', unsafe_allow_html=True)
+    st.markdown('<div class="main-subtitle">나라장터 공고를 검색합니다 (현재 데모 데이터 기준)</div>', unsafe_allow_html=True)
 
+    card_start("검색 필터")
     col1, col2, col3 = st.columns(3)
     keyword = col1.text_input("검색어", placeholder="예: GPU, 서버, AI")
     filter_매칭 = col2.selectbox("AI 매칭", ["전체", "지원가능", "검토 필요", "보류"])
     filter_경쟁 = col3.selectbox("경쟁 강도", ["전체", "낮음", "보통", "높음"])
+    card_end()
 
     filtered = df.copy()
     if keyword:
@@ -247,9 +298,7 @@ elif menu == "공고 검색":
     if filter_경쟁 != "전체":
         filtered = filtered[filtered["경쟁강도"] == filter_경쟁]
 
-    st.caption(f"검색 결과 {len(filtered)}건")
-    st.divider()
-
+    card_start(f"검색 결과 {len(filtered)}건")
     for _, row in filtered.iterrows():
         dday = (row["마감일"] - today).days
         with st.expander(f"{row['공고명']} | {row['발주기관']} | {int(row['기초금액']/100000000)}억 | D-{dday}"):
@@ -262,53 +311,66 @@ elif menu == "공고 검색":
                 else:
                     st.session_state.관심공고.append(row["공고명"])
                 st.rerun()
+    card_end()
 
 # ══════════════════════════════════════════════════════════════
 # 3. 관심 공고
 # ══════════════════════════════════════════════════════════════
 elif menu == "관심 공고":
-    st.header("관심 공고")
+    st.markdown('<div class="main-title">⭐ 관심 공고</div>', unsafe_allow_html=True)
+    st.markdown('<div class="main-subtitle">관심 등록한 공고의 세부 내용을 확인합니다</div>', unsafe_allow_html=True)
+
     관심df = df[df["공고명"].isin(st.session_state.관심공고)]
 
     if len(관심df) == 0:
+        card_start()
         st.info("등록된 관심 공고가 없습니다. 공고 검색에서 등록하세요.")
+        card_end()
     else:
         for _, row in 관심df.iterrows():
             dday = (row["마감일"] - today).days
-            with st.expander(f"⭐ {row['공고명']} | {row['발주기관']} | D-{dday} | {row['ai_매칭']}"):
-                left, right = st.columns(2)
-                with left:
-                    st.markdown("**📝 공고 요약**")
-                    st.info(row["ai_요약"])
-                    st.markdown(f"**기초금액:** {int(row['기초금액']/100000000)}억원")
-                    st.markdown(f"**마감일:** {row['마감일'].strftime('%Y-%m-%d')} (D-{dday})")
-                    st.markdown(f"**경쟁강도:** {row['경쟁강도']}")
-                with right:
-                    st.markdown("**📄 제출 서류**")
-                    for 서류, 준비 in row["서류체크"].items():
-                        st.markdown(f"{'✅' if 준비 else '❌'} {서류}")
-                    if row["확인필요조건"]:
-                        st.markdown("**⚠️ 확인 필요**")
-                        for 조건 in row["확인필요조건"]:
-                            st.warning(조건)
-                st.markdown(f"**유사 낙찰률:** {row['유사낙찰률']}% | **낙찰가 범위:** {row['유사낙찰가범위']}")
+            card_start(f"⭐ {row['공고명']}")
+            left, right = st.columns(2)
+            with left:
+                st.markdown("**📝 AI 요약**")
+                st.info(row["ai_요약"])
+                st.markdown(f"**발주기관:** {row['발주기관']}")
+                st.markdown(f"**기초금액:** {int(row['기초금액']/100000000)}억원")
+                st.markdown(f"**마감일:** {row['마감일'].strftime('%Y-%m-%d')} (D-{dday})")
+                st.markdown(f"**경쟁강도:** {row['경쟁강도']}")
+                if row["확인필요조건"]:
+                    st.markdown("**⚠️ 확인 필요**")
+                    for 조건 in row["확인필요조건"]:
+                        st.warning(조건)
+            with right:
+                st.markdown("**📄 제출 서류 체크리스트**")
+                for 서류, 준비 in row["서류체크"].items():
+                    st.markdown(f"{'✅' if 준비 else '❌'} {서류}")
+                st.markdown("**📊 유사 낙찰 사례**")
+                st.markdown(f"- 평균 낙찰률: **{row['유사낙찰률']}%**")
+                st.markdown(f"- 낙찰가 범위: **{row['유사낙찰가범위']}**")
                 st.caption("※ 참고용 지표이며 실제 투찰가는 담당자가 판단하세요.")
-                if st.button("⭐ 관심 해제", key=f"r_{row['공고명']}"):
-                    st.session_state.관심공고.remove(row["공고명"])
-                    st.rerun()
+            if st.button("⭐ 관심 해제", key=f"r_{row['공고명']}"):
+                st.session_state.관심공고.remove(row["공고명"])
+                st.rerun()
+            card_end()
 
 # ══════════════════════════════════════════════════════════════
 # 4. 요건 매칭
 # ══════════════════════════════════════════════════════════════
 elif menu == "요건 매칭":
-    st.header("요건 매칭")
-    공고선택 = st.selectbox("공고 선택", df["공고명"].tolist())
+    st.markdown('<div class="main-title">🎯 요건 매칭</div>', unsafe_allow_html=True)
+    st.markdown('<div class="main-subtitle">공고 요건과 우리 회사 보유 현황을 비교합니다</div>', unsafe_allow_html=True)
+
+    card_start("공고 선택")
+    공고선택 = st.selectbox("공고를 선택하세요", df["공고명"].tolist(), label_visibility="collapsed")
+    card_end()
+
     row = df[df["공고명"] == 공고선택].iloc[0]
-    st.divider()
 
     left, right = st.columns([3, 2])
     with left:
-        st.subheader("요건 항목표")
+        card_start("요건 항목표")
         요건df = pd.DataFrame([
             {
                 "요건 항목": k,
@@ -320,9 +382,10 @@ elif menu == "요건 매칭":
             for k, v in row["요건"].items()
         ])
         st.dataframe(요건df, use_container_width=True, hide_index=True)
+        card_end()
 
     with right:
-        st.subheader("통합 매칭 결과")
+        card_start("통합 매칭 결과")
         총 = len(row["요건"])
         충족 = sum(1 for v in row["요건"].values() if v["충족"])
         미충족 = 총 - 충족
@@ -351,15 +414,16 @@ elif menu == "요건 매칭":
 
         st.caption(f"충족 {충족} / 미충족 {미충족} / 전체 {총}건")
         st.caption("※ AI 분석 결과이며 최종 판단은 담당자가 확인하세요.")
+        card_end()
 
 # ══════════════════════════════════════════════════════════════
 # 5. 회사 프로필
 # ══════════════════════════════════════════════════════════════
 elif menu == "회사 프로필":
-    st.header("회사 프로필")
-    st.caption("입력된 정보를 기준으로 AI가 공고 매칭을 수행합니다.")
-    st.divider()
+    st.markdown('<div class="main-title">🏢 회사 프로필</div>', unsafe_allow_html=True)
+    st.markdown('<div class="main-subtitle">입력된 정보를 기준으로 AI가 공고 매칭을 수행합니다</div>', unsafe_allow_html=True)
 
+    card_start("기본 정보")
     c = st.session_state.company
     col1, col2 = st.columns(2)
     with col1:
@@ -372,19 +436,19 @@ elif menu == "회사 프로필":
             index=["서울", "경기", "대전", "부산", "기타"].index(c["지역"]))
         c["예산금액대"] = st.selectbox("예산 금액대", ["1천만 ~ 1억", "1억 ~ 10억", "10억 이상"],
             index=["1천만 ~ 1억", "1억 ~ 10억", "10억 이상"].index(c["예산금액대"]))
-
     if st.button("저장", use_container_width=True):
         st.session_state.company = c
         st.success("저장되었습니다.")
+    card_end()
 
 # ══════════════════════════════════════════════════════════════
 # 6. 설정
 # ══════════════════════════════════════════════════════════════
 elif menu == "설정":
-    st.header("설정")
-    st.divider()
+    st.markdown('<div class="main-title">⚙️ 설정</div>', unsafe_allow_html=True)
+    st.markdown('<div class="main-subtitle">계정 관리 및 로그인</div>', unsafe_allow_html=True)
 
-    st.subheader("로그인")
+    card_start("로그인")
     st.text_input("이메일", placeholder="example@company.com")
     st.text_input("비밀번호", type="password", placeholder="••••••••")
     col1, col2 = st.columns(2)
@@ -394,15 +458,15 @@ elif menu == "설정":
     with col2:
         if st.button("로그아웃", use_container_width=True):
             st.info("로그아웃되었습니다. (데모)")
+    card_end()
 
-    st.divider()
-    st.subheader("회원가입")
+    card_start("회원가입")
     st.text_input("이름", placeholder="홍길동")
     st.text_input("회사명", placeholder="테크비전 주식회사")
     st.text_input("가입 이메일", placeholder="example@company.com")
     st.text_input("가입 비밀번호", type="password", placeholder="••••••••")
     if st.button("회원가입", use_container_width=True):
         st.success("가입이 완료되었습니다. (데모)")
+    card_end()
 
-    st.divider()
     st.caption("※ 이 대시보드는 참고용이며 최종 입찰 판단은 담당자가 직접 확인하세요.")
