@@ -182,18 +182,36 @@ if "관심공고" not in st.session_state:
     st.session_state.관심공고 = list(df[df["관심"] == True]["공고명"])
 
 # ── 사이드바 ───────────────────────────────────────────────────
+if "menu" not in st.session_state:
+    st.session_state.menu = "오늘의 액션"
+
 with st.sidebar:
     st.markdown("## 🥷 공고털이")
-    st.caption(datetime.today().strftime('%Y-%m-%d'))
+    st.caption(datetime.today().strftime("%Y-%m-%d"))
     st.divider()
-    menu = st.radio(
-        "메뉴",
-        ["오늘의 액션", "공고 검색", "관심 공고", "요건 매칭", "회사 프로필", "설정"],
-        label_visibility="collapsed"
-    )
+    메뉴목록 = [
+        ("오늘의 액션", "📋"),
+        ("공고 검색", "🔍"),
+        ("관심 공고", "⭐"),
+        ("요건 매칭", "🎯"),
+        ("회사 프로필", "🏢"),
+        ("설정", "⚙️"),
+    ]
+    for 이름, 아이콘 in 메뉴목록:
+        is_active = st.session_state.menu == 이름
+        if st.button(
+            f"{아이콘} {이름}",
+            key=f"menu_{이름}",
+            use_container_width=True,
+            type="primary" if is_active else "secondary"
+        ):
+            st.session_state.menu = 이름
+            st.rerun()
     st.divider()
     st.caption(f"👤 {st.session_state.company['회사명']}")
     st.caption(f"📍 {st.session_state.company['지역']} | {st.session_state.company['업종']}")
+
+menu = st.session_state.menu
 
 # ══════════════════════════════════════════════════════════════
 # 1. 오늘의 액션
