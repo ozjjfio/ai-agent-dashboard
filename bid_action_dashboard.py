@@ -199,8 +199,8 @@ def dday_badge(d):
 # 사이드바
 # ══════════════════════════════════════════════════════════════
 with st.sidebar:
-    st.markdown("### 🏛️ 공집사")
-    st.caption("공공조달 입찰 AI 에이전트")
+    st.markdown("### 🏛️ ")
+    st.caption("공공조달 입찰 분석 AI ETE 시스템")
     st.divider()
     menu = st.radio("", [
         "📋 데일리 액션 대시보드",
