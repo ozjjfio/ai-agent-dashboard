@@ -4,7 +4,7 @@ import plotly.graph_objects as go
 
 # ── 페이지 설정 ────────────────────────────────────────────────
 st.set_page_config(
-    page_title="공공조달 입찰 분석 AI ETE 시스템",
+    page_title="공공조달 입찰 AI ETE 시스템",
     page_icon="🏛️",
     layout="wide",
     initial_sidebar_state="expanded",
@@ -15,71 +15,124 @@ st.markdown("""
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap');
 
-html, body, [data-testid="stAppViewContainer"] {
+html, body, [data-testid="stAppViewContainer"],
+[data-testid="stMain"], [data-testid="block-container"] {
     font-family: 'Noto Sans KR', sans-serif;
-    background: #f5f4f0;
+    background: #0d1b2e !important;
+    color: #d6e4f7 !important;
 }
-[data-testid="stSidebar"] { background: #1a1918 !important; }
-[data-testid="stSidebar"] * { color: #d4d3ce !important; }
-[data-testid="stSidebar"] .stRadio label { font-size: 13px; }
-[data-testid="stSidebar"] hr { border-color: #333; }
+[data-testid="stSidebar"] {
+    background: #0a1628 !important;
+    border-right: 1px solid #1e3050;
+}
+[data-testid="stSidebar"] * { color: #8faecf !important; }
+[data-testid="stSidebar"] hr { border-color: #1e3050; }
 
+/* 메인 영역 텍스트 */
+p, span, div, td, th, li, label { color: #d6e4f7; }
+h1, h2, h3, h4, h5 { color: #e8f2ff !important; }
 h1 { font-size: 20px !important; font-weight: 700 !important; margin-bottom: 2px !important; }
 h2 { font-size: 15px !important; font-weight: 600 !important; }
 h3 { font-size: 13px !important; font-weight: 600 !important; }
 
+/* streamlit 기본 위젯 다크 */
+[data-testid="stSelectbox"] > div,
+[data-testid="stMultiSelect"] > div,
+[data-testid="stTextInput"] > div > div,
+[data-testid="stNumberInput"] > div {
+    background: #132040 !important;
+    border-color: #1e3a5f !important;
+    color: #d6e4f7 !important;
+}
+[data-testid="stSelectbox"] label,
+[data-testid="stMultiSelect"] label,
+[data-testid="stTextInput"] label,
+[data-testid="stNumberInput"] label { color: #8faecf !important; }
+[data-testid="stCaption"] p { color: #6a8faf !important; }
+
+/* 카드 */
 .card {
-    background: #fff; border: 1px solid #e0dfd8;
+    background: #132040;
+    border: 1px solid #1e3a5f;
     border-radius: 10px; padding: 16px; margin-bottom: 12px;
 }
-.kpi { background: #f0efe9; border-radius: 8px; padding: 14px 16px; }
-.kpi-l { font-size: 11px; color: #6b6a65; margin-bottom: 4px; }
-.kpi-v { font-size: 28px; font-weight: 700; }
-.green { color: #1f6b2e; } .amber { color: #7a4d0a; }
-.red   { color: #8b2020; } .blue  { color: #1a56a0; }
 
+/* KPI */
+.kpi { background: #0f2a48; border: 1px solid #1e3a5f; border-radius: 8px; padding: 14px 16px; }
+.kpi-l { font-size: 11px; color: #6a8faf; margin-bottom: 4px; }
+.kpi-v { font-size: 28px; font-weight: 700; color: #e8f2ff; }
+.green { color: #4ade80; } .amber { color: #fbbf24; }
+.red   { color: #f87171; } .blue  { color: #60a5fa; }
+
+/* 배지 */
 .badge { display:inline-block; font-size:10px; padding:2px 8px;
          border-radius:999px; font-weight:600; white-space:nowrap; }
-.bg   { background:#e6f4ea; color:#1f6b2e; }
-.ba   { background:#fdf3e0; color:#7a4d0a; }
-.br   { background:#fdeaea; color:#8b2020; }
-.bb   { background:#e8f0fb; color:#1a56a0; }
-.bgray{ background:#f0efe9; color:#444; }
+.bg   { background:#14532d; color:#86efac; }
+.ba   { background:#451a03; color:#fcd34d; }
+.br   { background:#450a0a; color:#fca5a5; }
+.bb   { background:#1e3a5f; color:#93c5fd; }
+.bgray{ background:#1e3050; color:#94a3b8; }
 
-.ok   { background:#e6f4ea; color:#1f6b2e; font-size:10px; padding:1px 6px; border-radius:4px; display:inline-block; }
-.warn { background:#fdf3e0; color:#7a4d0a; font-size:10px; padding:1px 6px; border-radius:4px; display:inline-block; }
-.ng   { background:#fdeaea; color:#8b2020; font-size:10px; padding:1px 6px; border-radius:4px; display:inline-block; }
+/* 칩 */
+.ok   { background:#14532d; color:#86efac; font-size:10px; padding:1px 6px; border-radius:4px; display:inline-block; }
+.warn { background:#451a03; color:#fcd34d; font-size:10px; padding:1px 6px; border-radius:4px; display:inline-block; }
+.ng   { background:#450a0a; color:#fca5a5; font-size:10px; padding:1px 6px; border-radius:4px; display:inline-block; }
 
+/* 액션 행 */
 .ar { display:flex; align-items:center; gap:10px; padding:8px 0;
-      border-bottom:1px solid #f5f4f0; font-size:12px; }
+      border-bottom:1px solid #1e3050; font-size:12px; color:#d6e4f7; }
 .ar:last-child { border-bottom:none; }
-.dr { width:8px; height:8px; border-radius:50%; background:#e24b4a; flex-shrink:0; display:inline-block; }
-.da { width:8px; height:8px; border-radius:50%; background:#ef9f27; flex-shrink:0; display:inline-block; }
-.dg { width:8px; height:8px; border-radius:50%; background:#3b8a4a; flex-shrink:0; display:inline-block; }
+.dr { width:8px; height:8px; border-radius:50%; background:#f87171; flex-shrink:0; display:inline-block; }
+.da { width:8px; height:8px; border-radius:50%; background:#fbbf24; flex-shrink:0; display:inline-block; }
+.dg { width:8px; height:8px; border-radius:50%; background:#4ade80; flex-shrink:0; display:inline-block; }
 
+/* 테이블 */
 .tbl { width:100%; border-collapse:collapse; font-size:12px; }
 .tbl th { padding:7px 10px; text-align:left; font-size:11px; font-weight:600;
-          color:#6b6a65; border-bottom:1px solid #e0dfd8; background:#f8f7f3; }
-.tbl td { padding:8px 10px; border-bottom:1px solid #f0efe9; color:#1a1918; }
+          color:#6a8faf; border-bottom:1px solid #1e3a5f; background:#0f2a48; }
+.tbl td { padding:8px 10px; border-bottom:1px solid #1e3050; color:#d6e4f7; }
 .tbl tr:last-child td { border-bottom:none; }
-.tbl tr:hover td { background:#fafaf7; }
+.tbl tr:hover td { background:#1a3254; }
 
-.profit { background:#f0efe9; border:1px solid #e0dfd8; border-radius:8px; padding:14px; text-align:center; }
-.profit-l { font-size:10px; color:#6b6a65; margin-bottom:4px; }
-.profit-v { font-size:17px; font-weight:700; color:#1a56a0; }
-.profit-s { font-size:10px; color:#9e9d98; margin-top:3px; }
+/* 수익 박스 */
+.profit { background:#0f2a48; border:1px solid #1e3a5f; border-radius:8px; padding:14px; text-align:center; }
+.profit-l { font-size:10px; color:#6a8faf; margin-bottom:4px; }
+.profit-v { font-size:17px; font-weight:700; color:#60a5fa; }
+.profit-s { font-size:10px; color:#4a6a8a; margin-top:3px; }
 
+/* 프로필 행 */
 .pr { display:flex; justify-content:space-between; align-items:center;
-      padding:8px 0; border-bottom:1px solid #f5f4f0; font-size:12px; }
+      padding:8px 0; border-bottom:1px solid #1e3050; font-size:12px; color:#d6e4f7; }
 .pr:last-child { border-bottom:none; }
-.pr-l { font-size:11px; color:#6b6a65; }
+.pr-l { font-size:11px; color:#6a8faf; }
 
-.email-box { background:#fff; border:1px solid #e0dfd8; border-radius:10px; padding:16px 20px; }
-.email-title { font-size:15px; font-weight:700; margin-bottom:4px; }
-.email-sub   { font-size:11px; color:#6b6a65; margin-bottom:14px; }
-.email-item  { background:#f8f7f3; border-radius:8px; padding:12px 14px; margin-bottom:8px; }
-.email-item-t{ font-size:13px; font-weight:600; margin-bottom:3px; }
-.email-item-s{ font-size:11px; color:#6b6a65; }
+/* 이메일 박스 */
+.email-box { background:#132040; border:1px solid #1e3a5f; border-radius:10px; padding:16px 20px; }
+.email-title { font-size:15px; font-weight:700; color:#e8f2ff; margin-bottom:4px; }
+.email-sub   { font-size:11px; color:#6a8faf; margin-bottom:14px; }
+.email-item  { background:#0f2a48; border-radius:8px; padding:12px 14px; margin-bottom:8px; }
+.email-item-t{ font-size:13px; font-weight:600; color:#d6e4f7; margin-bottom:3px; }
+.email-item-s{ font-size:11px; color:#6a8faf; }
+
+/* 사이드바 메뉴 링크 */
+.nav-menu a {
+    display: block;
+    padding: 8px 12px;
+    font-size: 13px;
+    color: #8faecf !important;
+    text-decoration: none;
+    border-radius: 6px;
+    margin-bottom: 2px;
+    border-left: 2px solid transparent;
+    transition: all .15s;
+}
+.nav-menu a:hover { color: #e8f2ff !important; background: #1a3254; }
+.nav-menu a.active {
+    color: #60a5fa !important;
+    background: #1a3254;
+    border-left: 2px solid #60a5fa;
+    font-weight: 600;
+}
 </style>
 """, unsafe_allow_html=True)
 
@@ -198,27 +251,42 @@ def dday_badge(d):
 # ══════════════════════════════════════════════════════════════
 # 사이드바
 # ══════════════════════════════════════════════════════════════
+MENU_ITEMS = [
+    ("dashboard", "📋 데일리 액션 대시보드"),
+    ("search",    "🔍 공고 검색"),
+    ("interest",  "⭐ 관심 공고"),
+    ("match",     "🎯 요건 매칭"),
+    ("profile",   "🏢 회사 프로필"),
+]
+
+# query param으로 현재 메뉴 상태 관리
+params = st.query_params
+current = params.get("menu", "dashboard")
+
 with st.sidebar:
-    st.markdown("### 🏛️ ")
-    st.caption("공공조달 입찰 분석 AI ETE 시스템")
+    st.markdown("### 🏛️ 공공조달 입찰 AI ETE 시스템")
+    st.markdown("<div style='font-size:11px;color:#4a6a8a;margin-bottom:12px'>End-to-End 입찰 자동화</div>", unsafe_allow_html=True)
     st.divider()
-    menu = st.radio("", [
-        "📋 데일리 액션 대시보드",
-        "🔍 공고 검색",
-        "⭐ 관심 공고",
-        "🎯 요건 매칭",
-        "🏢 회사 프로필",
-    ], label_visibility="collapsed")
+
+    nav_html = '<div class="nav-menu">'
+    for key, label in MENU_ITEMS:
+        active_cls = "active" if current == key else ""
+        nav_html += f'<a href="?menu={key}" class="{active_cls}">{label}</a>'
+    nav_html += '</div>'
+    st.markdown(nav_html, unsafe_allow_html=True)
+
     st.divider()
-    st.caption(f"**{COMPANY['name']}**")
-    st.caption(f"업종: {COMPANY['industry']}")
-    st.caption(f"지역: {COMPANY['region']}")
+    st.markdown(f"<div style='font-size:12px;color:#6a8faf;font-weight:600'>{COMPANY['name']}</div>", unsafe_allow_html=True)
+    st.markdown(f"<div style='font-size:11px;color:#4a6a8a'>업종: {COMPANY['industry']}</div>", unsafe_allow_html=True)
+    st.markdown(f"<div style='font-size:11px;color:#4a6a8a'>지역: {COMPANY['region']}</div>", unsafe_allow_html=True)
+
+menu = current
 
 
 # ══════════════════════════════════════════════════════════════
 # 화면 1 — 데일리 액션 대시보드
 # ══════════════════════════════════════════════════════════════
-if menu == "📋 데일리 액션 대시보드":
+if menu == "dashboard":
     st.markdown("# 📋 데일리 액션 대시보드")
     st.caption("2026년 5월 18일 (월) · 오늘 수집 기준 5건")
 
@@ -297,7 +365,7 @@ if menu == "📋 데일리 액션 대시보드":
 # ══════════════════════════════════════════════════════════════
 # 화면 2 — 공고 검색
 # ══════════════════════════════════════════════════════════════
-elif menu == "🔍 공고 검색":
+elif menu == "search":
     st.markdown("# 🔍 공고 검색")
 
     f1, f2, f3 = st.columns(3)
@@ -353,7 +421,7 @@ elif menu == "🔍 공고 검색":
 # ══════════════════════════════════════════════════════════════
 # 화면 3 — 관심 공고 (공고 상세)
 # ══════════════════════════════════════════════════════════════
-elif menu == "⭐ 관심 공고":
+elif menu == "interest":
     st.markdown("# ⭐ 관심 공고")
 
     sel = st.selectbox("공고 선택", [n["title"] for n in NOTICES], label_visibility="collapsed")
@@ -428,7 +496,7 @@ elif menu == "⭐ 관심 공고":
 # ══════════════════════════════════════════════════════════════
 # 화면 4 — 요건 매칭
 # ══════════════════════════════════════════════════════════════
-elif menu == "🎯 요건 매칭":
+elif menu == "match":
     st.markdown("# 🎯 요건 매칭")
     st.caption("AI가 첨부파일을 분석하여 우리 회사 조건과 비교합니다. 원문을 반드시 확인하세요.")
 
@@ -470,44 +538,44 @@ elif menu == "🎯 요건 매칭":
             values=[ok_cnt, warn_cnt, ng_cnt],
             labels=["충족","확인 필요","미충족"],
             hole=0.65,
-            marker_colors=["#1f6b2e","#ef9f27","#e24b4a"],
+            marker_colors=["#4ade80","#fbbf24","#f87171"],
             textinfo="none",
             hovertemplate="%{label}: %{value}건<extra></extra>",
         ))
         fig.update_layout(
             showlegend=True,
             legend=dict(orientation="h", yanchor="bottom", y=-0.25,
-                        xanchor="center", x=0.5, font=dict(size=11)),
+                        xanchor="center", x=0.5, font=dict(size=11, color="#d6e4f7")),
             margin=dict(t=10, b=50, l=10, r=10), height=230,
             paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="rgba(0,0,0,0)",
             annotations=[dict(text=f"<b>{score}점</b>", x=0.5, y=0.5,
-                              font_size=24, showarrow=False)],
+                              font_size=24, showarrow=False, font_color="#e8f2ff")],
         )
         st.plotly_chart(fig, use_container_width=True, config={"displayModeBar":False})
 
         # 다음 액션 추천
         if score >= 80:
             msg = "✅ <b>지원 가능</b> — 서류 준비 후 바로 지원을 권장합니다."
-            bg, border = "#e6f4ea", "#1f6b2e"
+            bg, border = "#14532d", "#4ade80"
         elif score >= 50:
             msg = "⚠️ <b>검토 필요</b> — 확인 필요 항목 해소 후 판단하세요."
-            bg, border = "#fdf3e0", "#ef9f27"
+            bg, border = "#451a03", "#fbbf24"
         else:
             msg = "🚫 <b>보류 권장</b> — 요건 미충족 항목이 많아 이번 입찰은 보류를 권장합니다."
-            bg, border = "#fdeaea", "#e24b4a"
+            bg, border = "#450a0a", "#f87171"
 
         st.markdown(f"""
         <div style="background:{bg};border:1px solid {border};border-radius:8px;
-                    padding:12px 14px;font-size:12px;line-height:1.8;margin-top:4px">
+                    padding:12px 14px;font-size:12px;line-height:1.8;margin-top:4px;color:#d6e4f7">
             {msg}<br>
-            <span style="font-size:11px;color:#6b6a65">충족 {ok_cnt}건 · 확인필요 {warn_cnt}건 · 미충족 {ng_cnt}건</span>
+            <span style="font-size:11px;color:#6a8faf">충족 {ok_cnt}건 · 확인필요 {warn_cnt}건 · 미충족 {ng_cnt}건</span>
         </div>""", unsafe_allow_html=True)
 
 
 # ══════════════════════════════════════════════════════════════
 # 화면 5 — 회사 프로필
 # ══════════════════════════════════════════════════════════════
-elif menu == "🏢 회사 프로필":
+elif menu == "profile":
     st.markdown("# 🏢 회사 프로필")
     st.caption("요건 매칭 및 AI 분석의 기준값으로 사용됩니다.")
 
