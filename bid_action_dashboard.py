@@ -264,7 +264,7 @@ params = st.query_params
 current = params.get("menu", "dashboard")
 
 with st.sidebar:
-    st.markdown("### 🏛️ 공공조달 입찰 AI ETE 시스템")
+    st.markdown("### 🏛️ Azure 기반 공공조달 시설관리 입찰 대응 AI E2E 시스템")
     st.markdown("<div style='font-size:11px;color:#4a6a8a;margin-bottom:12px'>End-to-End 입찰 자동화</div>", unsafe_allow_html=True)
     st.divider()
 
