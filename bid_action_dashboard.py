@@ -4,7 +4,7 @@ import plotly.graph_objects as go
 
 # ── 페이지 설정 ────────────────────────────────────────────────
 st.set_page_config(
-    page_title="공공조달 입찰 AI ETE 시스템",
+    page_title="Azure 기반 공공조달 시설관리 입찰 대응 AI E2E 시스템",
     page_icon="🏛️",
     layout="wide",
     initial_sidebar_state="expanded",
