@@ -278,7 +278,7 @@ div[data-testid="stMain"] div[data-testid="stButton"] > button:hover {
 .stTextInput label, .stSelectbox label { font-size: 10px !important; color: #4a6080 !important; }
 
 /* ── 여백 ── */
-.block-container { padding-top: 24px !important; padding-bottom: 16px !important; }
+.block-container { padding-top: 48px !important; padding-bottom: 16px !important; }
 section[data-testid="stSidebar"] > div { padding-top: 18px !important; }
 </style>
 """, unsafe_allow_html=True)
@@ -308,6 +308,7 @@ with st.sidebar:
         ("action",       "오늘의 액션"),
         ("profile",      "회사 프로필"),
         ("team",         "팀 관리 / ACL"),
+        ("settings",     "설정"),
     ]
 
     for key, label in pages:
@@ -365,18 +366,18 @@ def page_dashboard():
     section("📌", "오늘 우선 확인해야 할 공고")
 
     bids = [
-        ("#1", "2026년 OO구 공공시설 청소 용역",   "20260518-001", "OO구청", "D-1",  "42,000,000", "지원 가능", "green",  "urgent"),
-        ("#2", "OO공단 시설관리 위탁 운영 용역",    "20260518-004", "OO공단", "D-2", "120,000,000", "보류",     "gray",   "urgent"),
-        ("#3", "OO교육청 환경정비 용역",             "20260518-005", "OO교육청","D-3",  "55,000,000", "검토 필요","amber",  "urgent"),
-        ("#4", "OO병원 환경미화 용역 입찰",          "20260518-002", "OO병원", "D-7",  "85,000,000", "검토 필요","amber",  "warn"),
-        ("#5", "OO시 행정복지센터 청소 용역",        "20260518-003", "OO시",   "D-14", "31,000,000", "지원 가능","green",  "safe"),
+        ("#1", "2026년 OO구 공공시설 청소 용역",   "20260518-001", "OO구청",  "D-1",  "3,9*,***,***", "지원 가능", "green",  "urgent"),
+        ("#2", "OO공단 시설관리 위탁 운영 용역",    "20260518-004", "OO공단",  "D-2", "11*,***,***,***", "보류",     "gray",   "urgent"),
+        ("#3", "OO교육청 환경정비 용역",             "20260518-005", "OO교육청","D-3",  "5*,***,***,***", "검토 필요","amber",  "urgent"),
+        ("#4", "OO병원 환경미화 용역 입찰",          "20260518-002", "OO병원",  "D-7",  "8*,***,***,***", "검토 필요","amber",  "warn"),
+        ("#5", "OO시 행정복지센터 청소 용역",        "20260518-003", "OO시",    "D-14", "2*,***,***,***", "지원 가능","green",  "safe"),
     ]
 
     header = """
     <table class="bid-table">
     <thead><tr>
         <th>우선순위</th><th>공고명</th><th>공고번호</th>
-        <th>수요기관</th><th>마감일</th><th>추정가격</th><th>AI 매칭 결과</th>
+        <th>수요기관</th><th>마감일</th><th>AI 입찰가 (추정)</th><th>AI 매칭 결과</th>
     </tr></thead><tbody>
     """
     rows = ""
@@ -388,7 +389,7 @@ def page_dashboard():
             <td style="color:#4a5a72;font-size:12px">{num}</td>
             <td>{org}</td>
             <td>{dday(dd, dlevel)}</td>
-            <td>{price}원</td>
+            <td style="font-family:monospace;color:#8aaac8">{price}원 추정</td>
             <td>{badge(verdict, vkind)}</td>
         </tr>"""
     st.markdown(header + rows + "</tbody></table>", unsafe_allow_html=True)
@@ -535,8 +536,8 @@ def page_bid_detail():
     with hc3:
         st.markdown(f"""
         <div class="metric-card">
-            <div class="metric-label">추정가격</div>
-            <div style="font-size:16px;font-weight:700;color:#c0d0e8;margin-top:4px">4,200만원</div>
+            <div class="metric-label">AI 입찰가 (추정)</div>
+            <div style="font-size:14px;font-weight:700;color:#8aaac8;margin-top:4px;font-family:monospace">3,9*,***,***원대</div>
         </div>
         """, unsafe_allow_html=True)
     with hc4:
@@ -552,7 +553,7 @@ def page_bid_detail():
     left, right = st.columns([3, 2])
 
     with left:
-        section("📏", "rule field 추출 결과")
+        section("📏", "공고 상세")
         rc1, rc2 = st.columns(2)
         rules = [
             (rc1, "마감일",      "2026-05-19",      "#f04040"),
@@ -571,7 +572,7 @@ def page_bid_detail():
                 </div>
                 """, unsafe_allow_html=True)
 
-        section("🗂️", "근거 chunk 뷰어")
+        section("🗂️", "분석 요약")
         chunks = [
             ("chunk", "[chunk_042, line 12–15]", "ok",
              '수행 업종: <span class="hl-green">건물위생관리업</span>, <span class="hl-green">시설경비업</span> 보유 자격과 일치.'),
@@ -778,7 +779,7 @@ def page_profile():
             <div style="font-size:11px;color:#8aaac0;line-height:1.8">
                 청사 시설관리 · 아웃소싱 · FM 서비스 전문 대형 기업 &nbsp;|&nbsp;
                 사업시설 유지·관리 서비스업 &nbsp;|&nbsp;
-                <span style="color:#2ecc60;font-weight:600">중견 이상 FM 도메인 확장 사례</span>
+                <span style="color:#2ecc60;font-weight:600">중견기업</span>
             </div>
         </div>
         """, unsafe_allow_html=True)
@@ -788,11 +789,11 @@ def page_profile():
     pc1, pc2 = st.columns(2)
     with pc1:
         st.text_input("회사명", value="삼구아이앤씨(주)")
-        st.text_input("대표자명", value="구자관")
+        st.text_input("대표자명", value="김형규")
     with pc2:
         st.text_input("사업자등록번호", value="220-81-01574", disabled=True)
-        st.text_input("설립연도", value="1984")
-    st.text_input("본사 주소 (지역 요건 자동 판단)", value="서울특별시 강서구 마곡중앙8로 71 (마곡동, 마곡SH비즈니스센터)")
+        st.text_input("설립연도", value="1976년 (업력 51년차)")
+    st.text_input("본사 주소 (지역 요건 자동 판단)", value="서울특별시 중구 청계천로 100 시그니쳐타워 동관 6층")
 
     # ── 사업 영역 ──
     section("", "주요 사업 영역")
@@ -870,7 +871,7 @@ def page_profile():
                 <span style="color:#8aaac0">{name}</span>
                 <span style="color:#4a6080">{org}</span>
                 <span style="color:#4a6080">{year}</span>
-                <span class="record-del">✕</span>
+                <span class="record-del">O</span>
             </div>
             """, unsafe_allow_html=True)
         st.button("+ 실적 추가", key="add_record")
@@ -932,11 +933,11 @@ def page_team():
 
     section("", "멤버 목록")
     members = [
-        ("구본부장", "관리자",     "Admin",       "av-admin", "방금 전"),
-        ("김입찰",   "입찰/영업팀","Bid Manager", "av-bid",   "1시간 전"),
-        ("박현장",   "운영팀",     "Operations",  "av-ops",   "3시간 전"),
-        ("최재무",   "재무팀",     "Finance",     "av-fin",   "어제"),
-        ("정총무",   "총무팀",     "Viewer",      "av-gen",   "2일 전"),
+        ("주재륜", "관리자",     "Admin",       "av-admin", "방금 전"),
+        ("정해원", "입찰/영업팀","Bid Manager", "av-bid",   "1시간 전"),
+        ("송채원", "운영팀",     "Operations",  "av-ops",   "3시간 전"),
+        ("서수민", "재무팀",     "Finance",     "av-fin",   "어제"),
+        ("유선희", "총무팀",     "Viewer",      "av-gen",   "2일 전"),
     ]
     for name, team, role, av_cls, last in members:
         role_badge_map = {
@@ -1010,12 +1011,154 @@ def page_team():
         <span style="font-size:20px">☁️</span>
         <div style="font-size:13px;color:#c0a060;line-height:1.7">
             <strong style="color:#e8c080">Entra ID 연동 (확장 항목)</strong><br>
-            MVP에서는 Mock 로그인 + Role 선택 방식으로 구현합니다.
             확장 시 Entra ID 그룹과 매핑하여 회사 조직도 기반 권한 자동 부여,
             감사 로그, 부서별 문서 접근 제어가 가능합니다.
         </div>
     </div>
     """, unsafe_allow_html=True)
+
+
+# ══════════════════════════════════════════════════════════════════════════════
+# 7. 설정 (로그인 / 로그아웃 / 회원가입)
+# ══════════════════════════════════════════════════════════════════════════════
+def page_settings():
+    st.markdown("""
+    <div class="page-header">
+        <h2>설정</h2>
+        <div class="page-subtext">계정 관리 · 로그인 / 로그아웃 · 회원가입</div>
+    </div>
+    """, unsafe_allow_html=True)
+
+    # 로그인 상태 초기화
+    if "logged_in" not in st.session_state:
+        st.session_state.logged_in = False
+    if "auth_tab" not in st.session_state:
+        st.session_state.auth_tab = "login"
+
+    if st.session_state.logged_in:
+        # ── 로그인 상태 ──
+        st.markdown(f"""
+        <div class="content-card" style="max-width:420px">
+            <div style="display:flex;align-items:center;gap:14px;margin-bottom:16px">
+                <div class="avatar av-admin" style="width:44px;height:44px;font-size:14px">
+                    {st.session_state.get('username','사용자')[:2]}
+                </div>
+                <div>
+                    <div style="font-size:13px;font-weight:600;color:#c0d0e8">
+                        {st.session_state.get('username','사용자')}
+                    </div>
+                    <div style="font-size:10px;color:#4a6080;margin-top:2px">
+                        {st.session_state.get('user_email','user@example.com')}
+                    </div>
+                </div>
+            </div>
+            <div class="hdivider"></div>
+            <div class="match-row" style="margin-bottom:4px">
+                <span class="match-label">소속</span>
+                <span style="color:#8aaac8">삼구아이앤씨(주)</span>
+            </div>
+            <div class="match-row" style="margin-bottom:4px">
+                <span class="match-label">역할</span>
+                <span style="color:#8aaac8">{st.session_state.get('user_role','Viewer')}</span>
+            </div>
+            <div class="match-row">
+                <span class="match-label">마지막 로그인</span>
+                <span style="color:#4a6080">2026-05-18 09:12</span>
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+
+        st.markdown("<div style='height:10px'></div>", unsafe_allow_html=True)
+        if st.button("로그아웃", key="logout_btn"):
+            st.session_state.logged_in = False
+            st.session_state.username = ""
+            st.session_state.user_email = ""
+            st.session_state.user_role = ""
+            st.rerun()
+
+    else:
+        # ── 탭 선택 (로그인 / 회원가입) ──
+        tab_cols = st.columns([1, 1, 4])
+        with tab_cols[0]:
+            if st.button("로그인", key="tab_login"):
+                st.session_state.auth_tab = "login"
+        with tab_cols[1]:
+            if st.button("회원가입", key="tab_signup"):
+                st.session_state.auth_tab = "signup"
+
+        st.markdown("<div style='height:4px'></div>", unsafe_allow_html=True)
+
+        if st.session_state.auth_tab == "login":
+            # ── 로그인 폼 ──
+            st.markdown("""
+            <div style="font-size:13px;font-weight:600;color:#8aaac8;
+                margin-bottom:14px;padding-bottom:6px;border-bottom:1px solid #1a3060">
+                로그인
+            </div>
+            """, unsafe_allow_html=True)
+
+            with st.form("login_form"):
+                email_in = st.text_input("이메일", placeholder="example@samgu.co.kr")
+                pw_in    = st.text_input("비밀번호", type="password", placeholder="비밀번호 입력")
+                role_in  = st.selectbox("역할 선택", ["Admin", "Bid Manager", "Operations", "Finance", "Viewer"])
+                submitted = st.form_submit_button("로그인")
+
+                if submitted:
+                    if email_in and pw_in:
+                        st.session_state.logged_in   = True
+                        st.session_state.username    = email_in.split("@")[0]
+                        st.session_state.user_email  = email_in
+                        st.session_state.user_role   = role_in
+                        st.rerun()
+                    else:
+                        st.markdown('<div style="color:#e84040;font-size:11px;margin-top:4px">이메일과 비밀번호를 입력해주세요.</div>', unsafe_allow_html=True)
+
+            st.markdown("""
+            <div style="font-size:10px;color:#3a5070;margin-top:10px">
+                비밀번호를 잊으셨나요? &nbsp;
+                <span style="color:#3a8ef0;cursor:pointer">재설정 요청</span>
+            </div>
+            """, unsafe_allow_html=True)
+
+        else:
+            # ── 회원가입 폼 ──
+            st.markdown("""
+            <div style="font-size:13px;font-weight:600;color:#8aaac8;
+                margin-bottom:14px;padding-bottom:6px;border-bottom:1px solid #1a3060">
+                회원가입
+            </div>
+            """, unsafe_allow_html=True)
+
+            with st.form("signup_form"):
+                su_name  = st.text_input("이름", placeholder="홍길동")
+                su_email = st.text_input("이메일", placeholder="example@samgu.co.kr")
+                su_dept  = st.selectbox("소속 팀", ["입찰/영업팀", "운영팀", "재무팀", "총무팀", "기타"])
+                su_role  = st.selectbox("요청 역할", ["Bid Manager", "Operations", "Finance", "Viewer"])
+                su_pw    = st.text_input("비밀번호", type="password", placeholder="8자 이상")
+                su_pw2   = st.text_input("비밀번호 확인", type="password", placeholder="동일하게 입력")
+                submitted2 = st.form_submit_button("가입 신청")
+
+                if submitted2:
+                    if not su_name or not su_email or not su_pw:
+                        st.markdown('<div style="color:#e84040;font-size:11px;margin-top:4px">모든 항목을 입력해주세요.</div>', unsafe_allow_html=True)
+                    elif su_pw != su_pw2:
+                        st.markdown('<div style="color:#e84040;font-size:11px;margin-top:4px">비밀번호가 일치하지 않습니다.</div>', unsafe_allow_html=True)
+                    elif len(su_pw) < 8:
+                        st.markdown('<div style="color:#e84040;font-size:11px;margin-top:4px">비밀번호는 8자 이상이어야 합니다.</div>', unsafe_allow_html=True)
+                    else:
+                        st.markdown(f"""
+                        <div style="background:#0e2e1c;border:1px solid #1a5030;border-radius:8px;
+                            padding:12px 16px;font-size:11px;color:#2ecc60;margin-top:8px">
+                            {su_name}님의 가입 신청이 완료되었습니다.<br>
+                            관리자 승인 후 로그인이 가능합니다.
+                        </div>
+                        """, unsafe_allow_html=True)
+
+            st.markdown("""
+            <div style="font-size:10px;color:#3a5070;margin-top:10px">
+                이미 계정이 있으신가요? 로그인 탭을 이용해주세요.
+            </div>
+            """, unsafe_allow_html=True)
 
 
 # ══════════════════════════════════════════════════════════════════════════════
@@ -1035,3 +1178,5 @@ elif page == "profile":
     page_profile()
 elif page == "team":
     page_team()
+elif page == "settings":
+    page_settings()
