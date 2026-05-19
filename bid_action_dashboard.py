@@ -8,268 +8,278 @@ st.set_page_config(
 )
 
 # ── 전역 CSS ──────────────────────────────────────────────────────────────────
+# 남색 팔레트: 메인 #0a1628 / 사이드바 #081020 / 카드 #0f1e36 / 서브카드 #0c1830
 st.markdown("""
 <style>
 /* ── 기본 배경/폰트 ── */
 html, body, [data-testid="stAppViewContainer"], [data-testid="stMain"] {
-    background-color: #0e1117 !important;
-    color: #e0e0e0;
+    background-color: #0a1628 !important;
+    color: #cdd8ee;
     font-family: 'Segoe UI', sans-serif;
+    font-size: 13px;
 }
 [data-testid="stSidebar"] {
-    background-color: #161b27 !important;
-    border-right: 1px solid #2a2f3e;
+    background-color: #081020 !important;
+    border-right: 1px solid #162240;
 }
-[data-testid="stSidebar"] * { color: #c0c8d8 !important; }
+[data-testid="stSidebar"] * { color: #8aa0c0 !important; font-size: 12px !important; }
 
 /* ── 사이드바 헤더 ── */
 .sidebar-title {
-    font-size: 13px; font-weight: 700;
-    color: #e0e6f0 !important;
-    line-height: 1.4; margin-bottom: 4px;
+    font-size: 11px !important; font-weight: 700;
+    color: #c0d0e8 !important;
+    line-height: 1.5; margin-bottom: 3px;
 }
 .sidebar-sub {
-    font-size: 11px; color: #7a8499 !important; margin-bottom: 18px;
+    font-size: 10px !important; color: #4a6080 !important; margin-bottom: 16px;
 }
-.sidebar-divider { border-top: 1px solid #2a2f3e; margin: 10px 0 14px; }
+.sidebar-divider { border-top: 1px solid #162240; margin: 8px 0 12px; }
 
-/* ── 네비 버튼 ── */
-.nav-btn {
-    display: block; width: 100%; text-align: left;
-    background: transparent; border: none;
-    padding: 8px 12px; border-radius: 6px;
-    font-size: 13px; color: #9aa5bd !important;
-    cursor: pointer; margin-bottom: 2px; transition: all .15s;
+/* ── Streamlit 사이드바 버튼 (네비) ── */
+div[data-testid="stSidebar"] div[data-testid="stButton"] > button {
+    background: transparent !important;
+    border: none !important;
+    color: #6a88aa !important;
+    border-radius: 5px !important;
+    font-size: 11px !important;
+    padding: 6px 10px !important;
+    text-align: left !important;
+    width: 100% !important;
+    justify-content: flex-start !important;
+    font-weight: 400 !important;
 }
-.nav-btn:hover { background: #1e2535; color: #d0d8ee !important; }
-.nav-btn.active {
-    background: #1e4d8c !important; color: #e8f0fe !important;
-    font-weight: 600;
+div[data-testid="stSidebar"] div[data-testid="stButton"] > button:hover {
+    background: #101e38 !important;
+    color: #a0c0e0 !important;
+    border: none !important;
 }
 
 /* ── 회사 정보 ── */
 .sidebar-company {
-    font-size: 12px; color: #8899aa !important;
-    margin-top: 20px; padding-top: 14px;
-    border-top: 1px solid #2a2f3e;
+    font-size: 10px !important; color: #3a5070 !important;
+    margin-top: 18px; padding-top: 12px;
+    border-top: 1px solid #162240;
+    line-height: 1.7;
 }
-.sidebar-company strong { color: #c0cce0 !important; font-size: 13px; }
+.sidebar-company strong { color: #7090b0 !important; font-size: 11px !important; }
 
 /* ── 페이지 헤더 ── */
-.page-header { margin-bottom: 6px; }
+.page-header { margin-bottom: 4px; }
 .page-header h2 {
-    font-size: 22px; font-weight: 700; color: #e8edf5; margin: 0;
+    font-size: 17px; font-weight: 700; color: #d0dcf0; margin: 0;
 }
-.page-subtext { font-size: 13px; color: #6c7a96; margin-top: 4px; }
+.page-subtext { font-size: 11px; color: #4a6080; margin-top: 3px; }
 
 /* ── 지표 카드 ── */
 .metric-card {
-    background: #161e2e; border: 1px solid #263048;
-    border-radius: 10px; padding: 16px 20px; text-align: left;
+    background: #0f1e36; border: 1px solid #1a3060;
+    border-radius: 9px; padding: 14px 18px;
 }
-.metric-label { font-size: 12px; color: #7a8aaa; margin-bottom: 6px; }
-.metric-value { font-size: 32px; font-weight: 800; line-height: 1; }
-.mv-red    { color: #f04040; }
-.mv-amber  { color: #e8a020; }
-.mv-gray   { color: #9090b0; }
-.mv-blue   { color: #4a9eff; }
+.metric-label { font-size: 10px; color: #4a6080; margin-bottom: 5px; }
+.metric-value { font-size: 28px; font-weight: 800; line-height: 1; }
+.mv-red    { color: #e84040; }
+.mv-amber  { color: #d89010; }
+.mv-gray   { color: #7080a0; }
+.mv-blue   { color: #3a8ef0; }
 
 /* ── 섹션 제목 ── */
 .section-title {
-    font-size: 17px; font-weight: 700; color: #d0d8ec;
-    margin: 24px 0 12px;
-    display: flex; align-items: center; gap: 8px;
+    font-size: 13px; font-weight: 700; color: #a0b8d8;
+    margin: 20px 0 10px;
+    display: flex; align-items: center; gap: 6px;
 }
 
 /* ── 공고 테이블 ── */
 .bid-table {
     width: 100%; border-collapse: collapse;
-    background: #161e2e; border-radius: 10px; overflow: hidden;
+    background: #0f1e36; border-radius: 9px; overflow: hidden;
 }
 .bid-table th {
-    padding: 10px 14px; font-size: 12px; color: #7a8aaa;
-    font-weight: 600; background: #131a28;
-    border-bottom: 1px solid #263048; text-align: left;
+    padding: 8px 12px; font-size: 10px; color: #4a6080;
+    font-weight: 600; background: #0c1830;
+    border-bottom: 1px solid #1a3060; text-align: left;
 }
 .bid-table td {
-    padding: 11px 14px; font-size: 13px; color: #c8d0e0;
-    border-bottom: 1px solid #1e2840; vertical-align: middle;
+    padding: 9px 12px; font-size: 11px; color: #a0b8d0;
+    border-bottom: 1px solid #122040; vertical-align: middle;
 }
 .bid-table tr:last-child td { border-bottom: none; }
-.bid-table tr:hover td { background: #1a2438; }
+.bid-table tr:hover td { background: #122040; }
 
 /* ── 배지 ── */
 .badge {
-    display: inline-block; padding: 3px 9px;
-    border-radius: 99px; font-size: 11px; font-weight: 700;
+    display: inline-block; padding: 2px 8px;
+    border-radius: 99px; font-size: 10px; font-weight: 700;
     white-space: nowrap;
 }
-.badge-green  { background: #1a3d2a; color: #34d870; border: 1px solid #2a6040; }
-.badge-amber  { background: #3d2a0a; color: #f0a020; border: 1px solid #6a4510; }
-.badge-red    { background: #3d1010; color: #f05050; border: 1px solid #6a2020; }
-.badge-gray   { background: #1e2535; color: #8090a8; border: 1px solid #2a3548; }
-.badge-blue   { background: #0a2448; color: #4a9eff; border: 1px solid #1a4488; }
+.badge-green  { background: #0e2e1c; color: #2ecc60; border: 1px solid #1a5030; }
+.badge-amber  { background: #2e1e04; color: #d89010; border: 1px solid #5a3a08; }
+.badge-red    { background: #2e0c0c; color: #e84040; border: 1px solid #5a1818; }
+.badge-gray   { background: #101828; color: #6080a0; border: 1px solid #1e3050; }
+.badge-blue   { background: #081a38; color: #3a8ef0; border: 1px solid #123470; }
 
 /* ── 마감 D-day ── */
 .dday {
-    display: inline-block; padding: 3px 8px;
-    border-radius: 6px; font-size: 11px; font-weight: 700;
+    display: inline-block; padding: 2px 7px;
+    border-radius: 5px; font-size: 10px; font-weight: 700;
 }
-.dday-urgent { background: #3d1010; color: #f05050; }
-.dday-warn   { background: #3d2a0a; color: #f0a020; }
-.dday-safe   { background: #0a2040; color: #4a9eff; }
+.dday-urgent { background: #2e0c0c; color: #e84040; }
+.dday-warn   { background: #2e1e04; color: #d89010; }
+.dday-safe   { background: #081838; color: #3a8ef0; }
 
 /* ── 카드 (일반) ── */
 .content-card {
-    background: #161e2e; border: 1px solid #263048;
-    border-radius: 10px; padding: 18px 20px; margin-bottom: 14px;
+    background: #0f1e36; border: 1px solid #1a3060;
+    border-radius: 9px; padding: 16px 18px; margin-bottom: 12px;
 }
 .content-card h4 {
-    font-size: 14px; font-weight: 600; color: #c0ccde;
-    margin: 0 0 14px;
+    font-size: 12px; font-weight: 600; color: #8aaac8;
+    margin: 0 0 12px;
 }
 
 /* ── 액션 아이템 ── */
 .action-item {
-    padding: 10px 14px; border-radius: 8px;
-    border-left: 3px solid; margin-bottom: 8px;
-    background: #111826;
+    padding: 9px 12px; border-radius: 7px;
+    border-left: 3px solid; margin-bottom: 7px;
+    background: #0c1830;
 }
 .action-item .action-team {
-    font-size: 10px; font-weight: 700;
-    text-transform: uppercase; margin-bottom: 4px; letter-spacing: .05em;
+    font-size: 9px; font-weight: 700;
+    text-transform: uppercase; margin-bottom: 3px; letter-spacing: .05em;
 }
-.action-item .action-text { font-size: 13px; color: #b0bcd0; line-height: 1.5; }
-.action-item .action-sub  { font-size: 11px; color: #5a6880; margin-top: 3px; }
+.action-item .action-text { font-size: 11px; color: #8aaac0; line-height: 1.5; }
+.action-item .action-sub  { font-size: 10px; color: #3a5070; margin-top: 2px; }
 
-.ai-bid   { border-color: #4a9eff; }
-.ai-bid   .action-team { color: #4a9eff; }
-.ai-ops   { border-color: #30c080; }
-.ai-ops   .action-team { color: #30c080; }
-.ai-fin   { border-color: #e8a020; }
-.ai-fin   .action-team { color: #e8a020; }
-.ai-admin { border-color: #a080e8; }
-.ai-admin .action-team { color: #a080e8; }
+.ai-bid   { border-color: #3a8ef0; }
+.ai-bid   .action-team { color: #3a8ef0; }
+.ai-ops   { border-color: #20a860; }
+.ai-ops   .action-team { color: #20a860; }
+.ai-fin   { border-color: #d89010; }
+.ai-fin   .action-team { color: #d89010; }
+.ai-admin { border-color: #8860d8; }
+.ai-admin .action-team { color: #8860d8; }
 
 /* ── chunk 뷰어 ── */
 .chunk-item {
-    border-radius: 8px; border-left: 3px solid;
-    padding: 10px 14px; margin-bottom: 8px;
-    background: #111826;
+    border-radius: 7px; border-left: 3px solid;
+    padding: 9px 12px; margin-bottom: 7px;
+    background: #0c1830;
 }
-.chunk-meta { font-size: 10px; color: #4a9eff; font-family: monospace; margin-bottom: 5px; }
-.chunk-text { font-size: 13px; color: #b0bcd0; line-height: 1.6; }
-.hl-green { color: #34d870; font-weight: 600; }
-.hl-amber { color: #f0a020; font-weight: 600; }
-.hl-blue  { color: #4a9eff; font-weight: 600; }
-.chunk-ok   { border-color: #30c080; }
-.chunk-warn { border-color: #e8a020; }
-.chunk-info { border-color: #4a9eff; }
+.chunk-meta { font-size: 9px; color: #3a8ef0; font-family: monospace; margin-bottom: 4px; }
+.chunk-text { font-size: 11px; color: #8aaac0; line-height: 1.6; }
+.hl-green { color: #2ecc60; font-weight: 600; }
+.hl-amber { color: #d89010; font-weight: 600; }
+.hl-blue  { color: #3a8ef0; font-weight: 600; }
+.chunk-ok   { border-color: #20a860; }
+.chunk-warn { border-color: #d89010; }
+.chunk-info { border-color: #3a8ef0; }
 
 /* ── 매칭 행 ── */
 .match-row {
     display: flex; align-items: center; justify-content: space-between;
-    padding: 8px 12px; border-radius: 7px;
-    background: #111826; margin-bottom: 5px; font-size: 13px;
+    padding: 7px 10px; border-radius: 6px;
+    background: #0c1830; margin-bottom: 4px; font-size: 11px;
 }
-.match-label { color: #8090a8; }
-.match-ok    { color: #34d870; font-weight: 600; }
-.match-warn  { color: #f0a020; font-weight: 600; }
-.match-no    { color: #f05050; font-weight: 600; }
+.match-label { color: #5070a0; }
+.match-ok    { color: #2ecc60; font-weight: 600; }
+.match-warn  { color: #d89010; font-weight: 600; }
+.match-no    { color: #e84040; font-weight: 600; }
 
 /* ── 폼 요소 ── */
-.form-label {
-    font-size: 11px; font-weight: 600; color: #7a8aaa;
-    margin-bottom: 5px; display: block;
-}
 .form-input {
-    width: 100%; padding: 8px 12px;
-    background: #111826; border: 1px solid #2a3548;
-    border-radius: 7px; color: #c0d0e8;
-    font-size: 13px; margin-bottom: 10px; box-sizing: border-box;
+    width: 100%; padding: 7px 10px;
+    background: #0c1830; border: 1px solid #1a3060;
+    border-radius: 6px; color: #a0b8d0;
+    font-size: 11px; margin-bottom: 9px; box-sizing: border-box;
 }
-.form-input.disabled { color: #4a5568; }
+.form-input.disabled { color: #304060; }
 
 /* ── 지역 그리드 ── */
-.region-grid { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+.region-grid { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 7px; }
 .region-tag {
-    padding: 5px 12px; border-radius: 6px;
-    font-size: 12px; cursor: pointer;
-    border: 1px solid #2a3548; color: #6a7a92; background: #111826;
+    padding: 4px 10px; border-radius: 5px;
+    font-size: 11px; cursor: pointer;
+    border: 1px solid #1a3060; color: #4a6080; background: #0c1830;
 }
 .region-tag.on {
-    background: #0a2448; border-color: #1a4488;
-    color: #4a9eff; font-weight: 600;
+    background: #081838; border-color: #1a4480;
+    color: #3a8ef0; font-weight: 600;
 }
 
 /* ── 실적 행 ── */
 .record-row {
     display: grid; grid-template-columns: 1fr 80px 60px 30px;
     gap: 8px; align-items: center;
-    padding: 8px 12px; background: #111826;
-    border-radius: 7px; margin-bottom: 5px; font-size: 12px;
+    padding: 7px 10px; background: #0c1830;
+    border-radius: 6px; margin-bottom: 4px; font-size: 11px;
 }
-.record-del { color: #f05050; cursor: pointer; text-align: right; }
+.record-del { color: #e84040; cursor: pointer; text-align: right; }
 
 /* ── ACL 매트릭스 ── */
 .acl-table {
     width: 100%; border-collapse: collapse;
-    background: #161e2e; border-radius: 10px; overflow: hidden;
+    background: #0f1e36; border-radius: 9px; overflow: hidden;
 }
 .acl-table th {
-    padding: 9px 12px; font-size: 11px;
-    background: #131a28; color: #7a8aaa;
-    border-bottom: 1px solid #263048; text-align: center;
+    padding: 8px 10px; font-size: 10px;
+    background: #0c1830; color: #4a6080;
+    border-bottom: 1px solid #1a3060; text-align: center;
 }
 .acl-table th:first-child { text-align: left; }
 .acl-table td {
-    padding: 9px 12px; font-size: 12px; color: #b0bcd0;
-    border-bottom: 1px solid #1e2840; text-align: center;
+    padding: 8px 10px; font-size: 11px; color: #8aaac0;
+    border-bottom: 1px solid #122040; text-align: center;
 }
 .acl-table td:first-child { text-align: left; }
 .acl-table tr:last-child td { border-bottom: none; }
-.acl-ok   { color: #34d870; font-size: 16px; }
-.acl-off  { color: #2a3548; font-size: 16px; }
-.acl-part { color: #9090b0; font-size: 16px; }
+.acl-ok   { color: #2ecc60; font-size: 14px; }
+.acl-off  { color: #1a3060; font-size: 14px; }
+.acl-part { color: #7080a0; font-size: 14px; }
 
 /* ── 팀원 행 ── */
 .member-row {
-    display: grid; grid-template-columns: 36px 1fr 110px 120px 100px 40px;
-    gap: 10px; align-items: center;
-    padding: 10px 14px; background: #111826;
-    border-radius: 8px; margin-bottom: 6px; font-size: 13px;
+    display: grid; grid-template-columns: 30px 1fr 110px 110px 90px 30px;
+    gap: 8px; align-items: center;
+    padding: 9px 12px; background: #0c1830;
+    border-radius: 7px; margin-bottom: 5px; font-size: 11px;
 }
 .avatar {
-    width: 34px; height: 34px; border-radius: 50%;
+    width: 28px; height: 28px; border-radius: 50%;
     display: flex; align-items: center; justify-content: center;
-    font-size: 11px; font-weight: 700;
+    font-size: 10px; font-weight: 700;
 }
-.av-admin { background: #2a1a48; color: #a080e8; }
-.av-bid   { background: #0a2448; color: #4a9eff; }
-.av-ops   { background: #0a2a1a; color: #30c080; }
-.av-fin   { background: #3a2000; color: #e8a020; }
-.av-gen   { background: #1a2030; color: #7a8aaa; }
+.av-admin { background: #1e1038; color: #8860d8; }
+.av-bid   { background: #081838; color: #3a8ef0; }
+.av-ops   { background: #081e10; color: #20a860; }
+.av-fin   { background: #281800; color: #d89010; }
+.av-gen   { background: #101828; color: #5070a0; }
 
 /* ── 인라인 구분선 ── */
-.hdivider { border-top: 1px solid #1e2840; margin: 14px 0; }
+.hdivider { border-top: 1px solid #122040; margin: 12px 0; }
 
-/* ── Streamlit 버튼 숨기기 / 오버라이드 ── */
-div[data-testid="stButton"] > button {
+/* ── Streamlit 버튼 (메인 영역) ── */
+div[data-testid="stMain"] div[data-testid="stButton"] > button {
     background: transparent !important;
-    border: 1px solid #2a3e5a !important;
-    color: #9ab0cc !important;
-    border-radius: 7px !important;
-    font-size: 13px !important;
-    padding: 6px 16px !important;
+    border: 1px solid #1a3060 !important;
+    color: #6090b8 !important;
+    border-radius: 6px !important;
+    font-size: 11px !important;
+    padding: 5px 14px !important;
 }
-div[data-testid="stButton"] > button:hover {
-    background: #1a2a40 !important;
-    color: #c0d4ee !important;
-    border-color: #3a5a88 !important;
+div[data-testid="stMain"] div[data-testid="stButton"] > button:hover {
+    background: #101e38 !important;
+    color: #90b8d8 !important;
+    border-color: #2a4a80 !important;
 }
-/* 불필요한 Streamlit 여백 제거 */
-.block-container { padding-top: 28px !important; padding-bottom: 20px !important; }
-section[data-testid="stSidebar"] > div { padding-top: 20px !important; }
+
+/* ── Streamlit 기본 텍스트 요소 크기 ── */
+.stTextInput input, .stSelectbox select, .stRadio label,
+[data-testid="stRadio"] label { font-size: 11px !important; }
+.stTextInput label, .stSelectbox label { font-size: 10px !important; color: #4a6080 !important; }
+
+/* ── 여백 ── */
+.block-container { padding-top: 24px !important; padding-bottom: 16px !important; }
+section[data-testid="stSidebar"] > div { padding-top: 18px !important; }
 </style>
 """, unsafe_allow_html=True)
 
@@ -286,18 +296,18 @@ def nav(p):
 # ── 사이드바 ──────────────────────────────────────────────────────────────────
 with st.sidebar:
     st.markdown("""
-    <div class="sidebar-title">🏢 Azure 기반 공공조달<br>시설관리 입찰 대응 AI E2E 시스템</div>
+    <div class="sidebar-title">Azure 기반 공공조달<br>시설관리 입찰 대응 AI E2E 시스템</div>
     <div class="sidebar-sub">End-to-End 입찰 자동화</div>
     <div class="sidebar-divider"></div>
     """, unsafe_allow_html=True)
 
     pages = [
-        ("dashboard",    "📋 데일리 액션 대시보드"),
-        ("bid_search",   "🔍 공고 검색"),
-        ("bid_detail",   "📄 공고 상세 / 근거 뷰어"),
-        ("action",       "⚡ 오늘의 액션"),
-        ("profile",      "🏗️ 회사 프로필"),
-        ("team",         "👥 팀 관리 / ACL"),
+        ("dashboard",    "데일리 액션 대시보드"),
+        ("bid_search",   "공고 검색"),
+        ("bid_detail",   "공고 상세 / 근거 뷰어"),
+        ("action",       "오늘의 액션"),
+        ("profile",      "회사 프로필"),
+        ("team",         "팀 관리 / ACL"),
     ]
 
     for key, label in pages:
@@ -307,9 +317,9 @@ with st.sidebar:
 
     st.markdown("""
     <div class="sidebar-company">
-        <strong>(주)청명서비스</strong><br>
-        업종: 청소업 / 시설관리업<br>
-        지역: 서울특별시
+        <strong>삼구아이앤씨(주)</strong><br>
+        업종: FM·아웃소싱·시설관리<br>
+        지역: 전국 주요 거점
     </div>
     """, unsafe_allow_html=True)
 
@@ -322,7 +332,7 @@ def dday(text, level="safe"):
     return f'<span class="dday dday-{level}">{text}</span>'
 
 def section(icon, title):
-    st.markdown(f'<div class="section-title">{icon} {title}</div>', unsafe_allow_html=True)
+    st.markdown(f'<div class="section-title">{title}</div>', unsafe_allow_html=True)
 
 
 # ══════════════════════════════════════════════════════════════════════════════
@@ -331,7 +341,7 @@ def section(icon, title):
 def page_dashboard():
     st.markdown("""
     <div class="page-header">
-        <h2>📋 데일리 액션 대시보드</h2>
+        <h2>데일리 액션 대시보드</h2>
         <div class="page-subtext">2026년 5월 18일 (월) · 오늘 수집 기준 5건</div>
     </div>
     """, unsafe_allow_html=True)
@@ -415,11 +425,11 @@ def page_dashboard():
             </div>
             <div class="match-row">
                 <span class="match-label">수신자</span>
-                <span style="color:#c0d0e8">입찰팀장, 대표</span>
+                <span style="color:#8aaac8">입찰팀장, 대표</span>
             </div>
             <div class="match-row">
                 <span class="match-label">포함 내용</span>
-                <span style="color:#c0d0e8">긴급 공고 · 오늘의 액션</span>
+                <span style="color:#8aaac8">긴급 공고 · 오늘의 액션</span>
             </div>
             <div class="match-row">
                 <span class="match-label">Teams 알림</span>
@@ -427,11 +437,11 @@ def page_dashboard():
             </div>
             <div class="match-row">
                 <span class="match-label">마지막 발송</span>
-                <span style="color:#8090a8">2026-05-18 08:00</span>
+                <span style="color:#3a5a7a">2026-05-18 08:00</span>
             </div>
         </div>
         """, unsafe_allow_html=True)
-        st.button("📤 지금 즉시 발송")
+        st.button("지금 즉시 발송")
 
 
 # ══════════════════════════════════════════════════════════════════════════════
@@ -440,7 +450,7 @@ def page_dashboard():
 def page_bid_search():
     st.markdown("""
     <div class="page-header">
-        <h2>🔍 공고 검색</h2>
+        <h2>공고 검색</h2>
         <div class="page-subtext">나라장터 연동 · 실시간 수집</div>
     </div>
     """, unsafe_allow_html=True)
@@ -496,7 +506,7 @@ def page_bid_search():
 def page_bid_detail():
     st.markdown("""
     <div class="page-header">
-        <h2>📄 공고 상세 / 근거 뷰어</h2>
+        <h2>공고 상세 / 근거 뷰어</h2>
         <div class="page-subtext">OO구 공공시설 청소 용역 · chunk/rule 기반 분석</div>
     </div>
     """, unsafe_allow_html=True)
@@ -582,7 +592,7 @@ def page_bid_detail():
 
         section("💬", "RAG 질문하기")
         st.text_input("", placeholder="예: 소방시설 자격이 꼭 필요한가요?", label_visibility="collapsed", key="rag_input")
-        st.button("✉️ 질문 전송", key="rag_send")
+        st.button("질문 전송", key="rag_send")
         st.markdown('<div style="font-size:11px;color:#4a5a72;margin-top:4px">3순위 확장 — Azure AI Search 기반 RAG</div>', unsafe_allow_html=True)
 
     with right:
@@ -621,9 +631,9 @@ def page_bid_detail():
 
         st.markdown("<div style='height:10px'></div>", unsafe_allow_html=True)
         bc1, bc2, bc3 = st.columns(3)
-        with bc1: st.button("📣 Teams 전송", key="teams_btn")
-        with bc2: st.button("📥 HWP 원문", key="hwp_btn")
-        with bc3: st.button("🔗 나라장터", key="g2b_btn")
+        with bc1: st.button("Teams 전송", key="teams_btn")
+        with bc2: st.button("HWP 원문", key="hwp_btn")
+        with bc3: st.button("나라장터", key="g2b_btn")
 
 
 # ══════════════════════════════════════════════════════════════════════════════
@@ -632,7 +642,7 @@ def page_bid_detail():
 def page_action():
     st.markdown("""
     <div class="page-header">
-        <h2>⚡ 오늘의 액션</h2>
+        <h2>오늘의 액션</h2>
         <div class="page-subtext">2026년 5월 18일 (월) · LLM 자동 생성</div>
     </div>
     """, unsafe_allow_html=True)
@@ -730,7 +740,7 @@ def page_action():
                 """, unsafe_allow_html=True)
 
         st.markdown("<div style='height:12px'></div>", unsafe_allow_html=True)
-        st.button("📣 부서별 액션 Teams 전송", key="biz_teams")
+        st.button("부서별 액션 Teams 전송", key="biz_teams")
 
 
 # ══════════════════════════════════════════════════════════════════════════════
@@ -739,109 +749,170 @@ def page_action():
 def page_profile():
     st.markdown("""
     <div class="page-header">
-        <h2>🏗️ 회사 프로필 설정</h2>
-        <div class="page-subtext">입력 정보는 공고 매칭 시 자동 비교에 활용됩니다</div>
+        <h2>회사 프로필 설정</h2>
+        <div class="page-subtext">입력 정보는 공고 매칭 시 자동 비교에 활용됩니다 · 삼구아이앤씨(주)</div>
     </div>
     """, unsafe_allow_html=True)
 
-    cov_col, _ = st.columns([2, 3])
+    # ── 매칭 커버리지 + 회사 소개 요약 ──
+    cov_col, info_col = st.columns([2, 3])
     with cov_col:
         st.markdown("""
         <div class="content-card" style="display:flex;align-items:center;gap:16px;padding:12px 16px">
             <div>
-                <div style="font-size:11px;color:#6a7a92">현재 매칭 커버리지</div>
-                <div style="font-size:24px;font-weight:800;color:#34d870">78%</div>
+                <div style="font-size:10px;color:#4a6080">현재 매칭 커버리지</div>
+                <div style="font-size:24px;font-weight:800;color:#2ecc60">94%</div>
             </div>
             <div style="flex:1">
-                <div style="height:8px;background:#1a2535;border-radius:99px;overflow:hidden">
-                    <div style="width:78%;height:100%;background:#1D9E75;border-radius:99px"></div>
+                <div style="height:8px;background:#0a1828;border-radius:99px;overflow:hidden">
+                    <div style="width:94%;height:100%;background:#1a9e60;border-radius:99px"></div>
                 </div>
-                <div style="font-size:11px;color:#4a5a72;margin-top:5px">장비 정보 보완 시 90%+</div>
+                <div style="font-size:10px;color:#3a5070;margin-top:4px">전국 영업망 · 다수 자격 보유로 높은 커버리지</div>
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+    with info_col:
+        st.markdown("""
+        <div class="content-card" style="padding:12px 16px">
+            <div style="font-size:10px;color:#4a6080;margin-bottom:6px;font-weight:600">기업 개요</div>
+            <div style="font-size:11px;color:#8aaac0;line-height:1.8">
+                청사 시설관리 · 아웃소싱 · FM 서비스 전문 대형 기업 &nbsp;|&nbsp;
+                사업시설 유지·관리 서비스업 &nbsp;|&nbsp;
+                <span style="color:#2ecc60;font-weight:600">중견 이상 FM 도메인 확장 사례</span>
             </div>
         </div>
         """, unsafe_allow_html=True)
 
-    section("🪪", "기본 정보")
+    # ── 기본 정보 ──
+    section("", "기본 정보")
     pc1, pc2 = st.columns(2)
     with pc1:
-        st.text_input("회사명", value="(주)청명서비스")
-        st.text_input("대표자명", value="홍길동")
+        st.text_input("회사명", value="삼구아이앤씨(주)")
+        st.text_input("대표자명", value="구자관")
     with pc2:
-        st.text_input("사업자등록번호", value="123-45-67890", disabled=True)
-        st.text_input("설립연도", value="2015")
-    st.text_input("본사 주소 (지역 요건 자동 판단)", value="서울특별시 강남구 ○○로 123")
+        st.text_input("사업자등록번호", value="220-81-01574", disabled=True)
+        st.text_input("설립연도", value="1984")
+    st.text_input("본사 주소 (지역 요건 자동 판단)", value="서울특별시 강서구 마곡중앙8로 71 (마곡동, 마곡SH비즈니스센터)")
 
-    section("📜", "보유 자격 / 업종 등록")
+    # ── 사업 영역 ──
+    section("", "주요 사업 영역")
     st.markdown("""
-    <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:10px">
-        <span class="badge badge-blue">건물위생관리업 ✕</span>
-        <span class="badge badge-blue">시설경비업 ✕</span>
-        <span class="badge badge-blue">전기안전관리업 ✕</span>
-        <span class="badge badge-blue">건물시설관리업 ✕</span>
-    </div>
-    <div style="font-size:11px;color:#4a5a72">
-        ⚠️ 미보유 자격이 필수인 공고는 자동으로 '보류' 판정됩니다
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px">
+        <div class="content-card" style="padding:10px 14px;margin-bottom:0;text-align:center">
+            <div style="font-size:10px;color:#4a6080;margin-bottom:4px">사업 분야 1</div>
+            <div style="font-size:12px;font-weight:600;color:#8aaac8">청사 시설관리</div>
+            <div style="font-size:10px;color:#3a5070;margin-top:3px">공공기관 · 정부청사</div>
+        </div>
+        <div class="content-card" style="padding:10px 14px;margin-bottom:0;text-align:center">
+            <div style="font-size:10px;color:#4a6080;margin-bottom:4px">사업 분야 2</div>
+            <div style="font-size:12px;font-weight:600;color:#8aaac8">아웃소싱 서비스</div>
+            <div style="font-size:10px;color:#3a5070;margin-top:3px">HR · 경비 · 미화</div>
+        </div>
+        <div class="content-card" style="padding:10px 14px;margin-bottom:0;text-align:center">
+            <div style="font-size:10px;color:#4a6080;margin-bottom:4px">사업 분야 3</div>
+            <div style="font-size:12px;font-weight:600;color:#8aaac8">FM 통합서비스</div>
+            <div style="font-size:10px;color:#3a5070;margin-top:3px">빌딩 · 산업 · 공공</div>
+        </div>
     </div>
     """, unsafe_allow_html=True)
-    st.button("➕ 자격 추가", key="add_qual")
 
-    section("🗺️", "영업 가능 지역")
-    all_regions = ["서울", "경기", "인천", "부산", "대구", "광주", "대전", "울산", "세종", "강원", "충북", "충남"]
-    active_regions = ["서울", "경기", "인천"]
+    # ── 보유 자격 ──
+    section("", "보유 자격 / 업종 등록")
+    st.markdown("""
+    <div style="display:flex;flex-wrap:wrap;gap:7px;margin-bottom:10px">
+        <span class="badge badge-blue">건물위생관리업</span>
+        <span class="badge badge-blue">건물시설관리업</span>
+        <span class="badge badge-blue">시설경비업</span>
+        <span class="badge badge-blue">소방시설관리업</span>
+        <span class="badge badge-blue">전기안전관리업</span>
+        <span class="badge badge-blue">고압가스안전관리업</span>
+        <span class="badge badge-blue">승강기유지관리업</span>
+        <span class="badge badge-blue">직업소개사업</span>
+        <span class="badge badge-blue">경비업(일반경비)</span>
+    </div>
+    <div style="font-size:10px;color:#3a5070">
+        미보유 자격이 필수인 공고는 자동으로 '보류' 판정됩니다
+    </div>
+    """, unsafe_allow_html=True)
+    st.button("+ 자격 추가", key="add_qual")
+
+    # ── 영업 가능 지역 ──
+    section("", "영업 가능 지역")
+    all_regions = ["서울", "경기", "인천", "부산", "대구", "광주", "대전", "울산", "세종", "강원", "충북", "충남", "전북", "전남", "경북", "경남", "제주"]
+    active_regions = ["서울", "경기", "인천", "부산", "대구", "광주", "대전", "울산", "세종", "충북", "충남", "경남", "경북"]
     tags = "".join([
         f'<span class="region-tag {"on" if r in active_regions else ""}">{r}</span>'
         for r in all_regions
     ])
     st.markdown(f'<div class="region-grid">{tags}</div>', unsafe_allow_html=True)
+    st.markdown('<div style="font-size:10px;color:#3a5070;margin-top:6px">전국 주요 거점 영업망 보유 · 지역 제한 공고 자동 필터링</div>', unsafe_allow_html=True)
 
-    st.markdown("<div style='height:16px'></div>", unsafe_allow_html=True)
+    st.markdown("<div style='height:14px'></div>", unsafe_allow_html=True)
 
     ec1, ec2 = st.columns(2)
     with ec1:
-        section("📋", "유사 실적 등록")
+        section("", "주요 수행 실적")
         st.markdown("""
-        <div class="record-row" style="background:#131a28;font-size:11px;color:#5a6a82;font-weight:600">
-            <span>용역명</span><span>발주처</span><span>기간</span><span></span>
+        <div class="record-row" style="background:#0c1830;font-size:10px;color:#3a5070;font-weight:600">
+            <span>용역명</span><span>발주처</span><span>연도</span><span></span>
         </div>
         """, unsafe_allow_html=True)
-        records = [("○○청사 시설관리","서울시","2024"),("△△건물 위생관리","경기도","2023"),("□□기관 경비용역","인천시","2022")]
+        records = [
+            ("정부청사 시설관리 용역",        "조달청",           "2024"),
+            ("공공기관 청사 FM 서비스",        "한국지역정보개발원","2023"),
+            ("대형 공공건물 위생·경비 용역",   "서울특별시",       "2023"),
+            ("공단 시설물 통합관리 용역",       "한국도로공사",     "2022"),
+            ("국가기관 아웃소싱 서비스",        "행정안전부",       "2022"),
+        ]
         for name, org, year in records:
             st.markdown(f"""
             <div class="record-row">
-                <span style="color:#c0d0e0">{name}</span>
-                <span style="color:#7a8aaa">{org}</span>
-                <span style="color:#7a8aaa">{year}</span>
-                <span class="record-del">🗑</span>
+                <span style="color:#8aaac0">{name}</span>
+                <span style="color:#4a6080">{org}</span>
+                <span style="color:#4a6080">{year}</span>
+                <span class="record-del">✕</span>
             </div>
             """, unsafe_allow_html=True)
-        st.button("➕ 실적 추가", key="add_record")
+        st.button("+ 실적 추가", key="add_record")
 
     with ec2:
-        section("🔧", "보유 장비 / 가용 인력")
-        equip = [("청소장비","12대"),("방역장비","5대"),("고소작업차","2대"),("전기설비","8식")]
-        for k, v in equip:
-            st.markdown(f"""
-            <div class="match-row">
-                <span class="match-label">{k}</span>
-                <span style="color:#c0d0e8;font-weight:600">{v}</span>
-            </div>
-            """, unsafe_allow_html=True)
-        st.markdown('<div class="hdivider"></div>', unsafe_allow_html=True)
-        staff = [("시설관리 인력","24명"),("경비 인력","16명"),("전기기술자","3명"),("관리 인력","5명")]
+        section("", "보유 인력 규모")
+        staff = [
+            ("시설관리 인력",   "3,200명 이상"),
+            ("경비·보안 인력",  "2,100명 이상"),
+            ("미화·위생 인력",  "4,500명 이상"),
+            ("전기·기계 기술자","480명"),
+            ("소방설비 기술자", "210명"),
+            ("관리·지원 인력",  "320명"),
+        ]
         for k, v in staff:
             st.markdown(f"""
             <div class="match-row">
                 <span class="match-label">{k}</span>
-                <span style="color:#c0d0e8;font-weight:600">{v}</span>
+                <span style="color:#8aaac8;font-weight:600">{v}</span>
+            </div>
+            """, unsafe_allow_html=True)
+        st.markdown('<div class="hdivider"></div>', unsafe_allow_html=True)
+        equip = [
+            ("청소·방역 장비",   "1,800식"),
+            ("전기설비 장비",    "650식"),
+            ("소방점검 장비",    "420식"),
+            ("승강기 유지보수",  "전국 거점"),
+        ]
+        for k, v in equip:
+            st.markdown(f"""
+            <div class="match-row">
+                <span class="match-label">{k}</span>
+                <span style="color:#8aaac8;font-weight:600">{v}</span>
             </div>
             """, unsafe_allow_html=True)
 
-    st.markdown("<div style='height:16px'></div>", unsafe_allow_html=True)
+    st.markdown("<div style='height:14px'></div>", unsafe_allow_html=True)
     sb1, sb2, _ = st.columns([1, 2, 4])
     with sb1:
         st.button("취소", key="cancel_profile")
     with sb2:
-        st.button("💾 저장 및 매칭 재실행", key="save_profile")
+        st.button("저장 및 매칭 재실행", key="save_profile")
 
 
 # ══════════════════════════════════════════════════════════════════════════════
@@ -850,22 +921,22 @@ def page_profile():
 def page_team():
     st.markdown("""
     <div class="page-header">
-        <h2>👥 팀 관리 / ACL 권한</h2>
+        <h2>팀 관리 / ACL 권한</h2>
         <div class="page-subtext">역할별로 볼 수 있는 공고·액션 범위가 달라집니다</div>
     </div>
     """, unsafe_allow_html=True)
 
     th1, th2 = st.columns([5, 1])
     with th2:
-        st.button("➕ 멤버 초대", key="invite_member")
+        st.button("+ 멤버 초대", key="invite_member")
 
-    section("👤", "멤버 목록")
+    section("", "멤버 목록")
     members = [
-        ("김철수", "관리자",    "Admin",       "av-admin", "방금 전"),
-        ("이영희", "입찰/영업팀","Bid Manager", "av-bid",   "1시간 전"),
-        ("박운기", "운영팀",    "Operations",  "av-ops",   "3시간 전"),
-        ("최재무", "재무팀",    "Finance",     "av-fin",   "어제"),
-        ("정총무", "총무팀",    "Viewer",      "av-gen",   "2일 전"),
+        ("구본부장", "관리자",     "Admin",       "av-admin", "방금 전"),
+        ("김입찰",   "입찰/영업팀","Bid Manager", "av-bid",   "1시간 전"),
+        ("박현장",   "운영팀",     "Operations",  "av-ops",   "3시간 전"),
+        ("최재무",   "재무팀",     "Finance",     "av-fin",   "어제"),
+        ("정총무",   "총무팀",     "Viewer",      "av-gen",   "2일 전"),
     ]
     for name, team, role, av_cls, last in members:
         role_badge_map = {
@@ -886,7 +957,7 @@ def page_team():
         </div>
         """, unsafe_allow_html=True)
 
-    section("🔐", "역할별 접근 권한 매트릭스")
+    section("", "역할별 접근 권한 매트릭스")
     acl_data = [
         ("전체 공고 목록",       True,  True,  False, False, False),
         ("지원 가능성 판정",     True,  True,  False, False, True),
